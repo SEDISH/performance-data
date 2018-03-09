@@ -1,7 +1,7 @@
-package org.openmrs.module.performancedata.options.service;
+package org.openmrs.isanteplus.performancedata.options.service;
 
-import org.openmrs.module.performancedata.options.util.CommandConstants;
-import org.openmrs.module.performancedata.options.util.CommandOption;
+import org.openmrs.isanteplus.performancedata.options.util.CommandOption;
+import org.openmrs.isanteplus.performancedata.options.util.CommandConstants;
 
 import java.util.Arrays;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package org.openmrs.module.performancedata.options.util;
+package org.openmrs.isanteplus.performancedata.options.util;
 
 public final class CommandConstants {
 

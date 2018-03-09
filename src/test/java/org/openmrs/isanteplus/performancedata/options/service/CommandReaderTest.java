@@ -1,8 +1,8 @@
-package org.openmrs.module.performancedata.options.service;
+package org.openmrs.isanteplus.performancedata.options.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openmrs.module.performancedata.options.util.CommandOption;
+import org.openmrs.isanteplus.performancedata.options.util.CommandOption;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 

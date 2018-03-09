@@ -1,6 +1,6 @@
-package org.openmrs.module.performancedata;
+package org.openmrs.isanteplus.performancedata;
 
-import org.openmrs.module.performancedata.options.GeneratorOptions;
+import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

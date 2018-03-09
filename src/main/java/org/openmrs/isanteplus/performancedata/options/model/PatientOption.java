@@ -1,4 +1,4 @@
-package org.openmrs.module.performancedata.options.model;
+package org.openmrs.isanteplus.performancedata.options.model;
 
 public class PatientOption {
     private static final long PATIENTS = 13_000;

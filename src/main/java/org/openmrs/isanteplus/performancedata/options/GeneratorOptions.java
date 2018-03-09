@@ -1,10 +1,10 @@
-package org.openmrs.module.performancedata.options;
+package org.openmrs.isanteplus.performancedata.options;
 
-import org.openmrs.module.performancedata.options.model.ClinicOption;
-import org.openmrs.module.performancedata.options.model.PatientOption;
-import org.openmrs.module.performancedata.options.service.CommandReader;
-import org.openmrs.module.performancedata.options.util.CommandConstants;
-import org.openmrs.module.performancedata.options.util.CommandOption;
+import org.openmrs.isanteplus.performancedata.options.model.ClinicOption;
+import org.openmrs.isanteplus.performancedata.options.model.PatientOption;
+import org.openmrs.isanteplus.performancedata.options.service.CommandReader;
+import org.openmrs.isanteplus.performancedata.options.util.CommandOption;
+import org.openmrs.isanteplus.performancedata.options.util.CommandConstants;
 
 import java.util.List;
 
