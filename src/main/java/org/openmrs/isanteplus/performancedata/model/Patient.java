@@ -1,14 +1,23 @@
 package org.openmrs.isanteplus.performancedata.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Patient extends AbstractEntity {
+
+    private static final String PREPARED_SQL = "insert into patient"
+            + " (patient_id, creator, date_created, changed_by, date_changed, voided," +
+            " voided_by, date_voided, void_reason, allergy_status)"
+            + " values (:patientId, :creator, :dateCreated, :changedBy, :dateChanged, " +
+            ":voided, :voidedBy, :dateVoided, :voidReason, :allergyStatus)";
 
     private long patientId;
 
@@ -30,28 +39,8 @@ public class Patient extends AbstractEntity {
 
     private String allergyStatus;
 
-    public Patient() {
-        preparedSql = "insert into patient"
-                + " (patient_id, creator, date_created, changed_by, date_changed, voided, voided_by" +
-                ", date_voided, void_reason, allergy_status)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    }
-
     @Override
-    public PreparedStatement fillPreparedStatement(PreparedStatement ps) throws SQLException {
-        ps.setString(1, Long.toString(patientId));
-        ps.setString(2, Long.toString(creator));
-        ps.setString(3, dateCreated.toString());
-        ps.setString(4, Long.toString(changedBy));
-        ps.setString(5, dateChanged.toString());
-        ps.setString(6, Long.toString(voided));
-        ps.setString(7, Long.toString(voidedBy));
-        ps.setString(8, dateVoided.toString());
-        ps.setString(9, voidReason);
-        ps.setString(10, allergyStatus);
-
-        ps.addBatch();
-
-        return ps;
+    public String getPreparedSql() {
+        return PREPARED_SQL;
     }
 }

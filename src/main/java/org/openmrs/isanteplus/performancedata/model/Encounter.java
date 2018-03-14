@@ -1,16 +1,26 @@
 package org.openmrs.isanteplus.performancedata.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Encounter extends AbstractEntity {
+
+    private static final String PREPARED_SQL = "insert into encounter"
+            + " (encounter_id, encounter_type, parent_id, location_id, form_id, " +
+            "encounter_datetime, creator, date_created, voided, voided_by, date_voided, " +
+            "void_reason, changed_by, date_changed, visit_id, uuid)"
+            + " values (:encounterType, :patientId, :encounterId, :locationId, :formId, " +
+            ":encounterDatetime, :creator, :dateCreated, :voided, :voidedBy, :dateVoided, " +
+            ":voidReason, :changedBy, :dateChanged, :visitId, :uuid)";
 
     private long encounterType;
 
@@ -44,36 +54,9 @@ public class Encounter extends AbstractEntity {
     
     private UUID uuid;
 
-    public Encounter() {
-        preparedSql = "insert into encounter"
-                + " (encounter_id, encounter_type, parent_id, location_id, form_id, " +
-                "encounter_datetime, creator, date_created, voided, voided_by, date_voided, " +
-                "void_reason, changed_by, date_changed, visit_id, uuid)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    }
-
     @Override
-    public PreparedStatement fillPreparedStatement(PreparedStatement ps) throws SQLException {
-        ps.setString(1, Long.toString(encounterType));
-        ps.setString(2, Long.toString(patientId));
-        ps.setString(3, Long.toString(encounterId));
-        ps.setString(4, Long.toString(locationId));
-        ps.setString(5, Long.toString(formId));
-        ps.setString(6, encounterDatetime.toString());
-        ps.setString(7, Long.toString(creator));
-        ps.setString(8, dateCreated.toString());
-        ps.setString(9, Long.toString(voided));
-        ps.setString(10, Long.toString(voidedBy));
-        ps.setString(11, dateVoided.toString());
-        ps.setString(12, voidReason);
-        ps.setString(13, Long.toString(changedBy));
-        ps.setString(14, dateChanged.toString());
-        ps.setString(15, Long.toString(visitId));
-        ps.setString(16, uuid.toString());
-
-        ps.addBatch();
-
-        return ps;
+    public String getPreparedSql() {
+        return PREPARED_SQL;
     }
 }
 

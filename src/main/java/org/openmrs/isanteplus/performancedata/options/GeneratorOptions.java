@@ -26,6 +26,8 @@ public class GeneratorOptions {
 
     private DbPortOption dbPort;
 
+    private DbName dbName;
+
     public GeneratorOptions(String[] args) {
         commandReader = new CommandReader(args);
         clinics = new ClinicOption();
@@ -62,6 +64,10 @@ public class GeneratorOptions {
         return dbPort.getPort();
     }
 
+    public String getDbName() {
+        return Optional.ofNullable(dbName.getName()).orElse(null);
+    }
+
     private void setOptions() {
         List<CommandOption> options = commandReader.parseOptions();
         for (CommandOption option : options) {
@@ -84,6 +90,9 @@ public class GeneratorOptions {
                 case CommandConstants.DB_PORT:
                     dbPort.setPort(option.getValue());
                     break;
+                case CommandConstants.DB_NAME:
+                    dbName = new DbName(option.getValue());
+                    break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +
                             option.getType() + "'.");
@@ -94,6 +103,9 @@ public class GeneratorOptions {
     private void checkObligatoryOptions() throws NullPointerException {
         if (dbPassword == null) {
             throw new NullPointerException("Lack of the database password.");
+        }
+        if (dbName == null) {
+            throw new NullPointerException("Lack of the database name.");
         }
     }
 }

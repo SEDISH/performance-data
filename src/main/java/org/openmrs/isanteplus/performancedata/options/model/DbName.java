@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DbPasswordOption {
+public class DbName {
 
-    private String password;
+    private String name;
 }
