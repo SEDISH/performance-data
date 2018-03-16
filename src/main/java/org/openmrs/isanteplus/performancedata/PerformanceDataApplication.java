@@ -1,5 +1,6 @@
 package org.openmrs.isanteplus.performancedata;
 
+import org.openmrs.isanteplus.performancedata.generator.service.GeneratorService;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import javax.inject.Inject;
+
 @SpringBootApplication
 public class PerformanceDataApplication {
 
@@ -15,12 +18,18 @@ public class PerformanceDataApplication {
         SpringApplication.run(PerformanceDataApplication.class, args);
     }
 
+    @Inject
+    GeneratorService generatorService;
+
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
             try {
                 GeneratorOptions generatorOptions = new GeneratorOptions(args);
                 System.out.println(generatorOptions.toString());
+
+                generatorService.genereteDatabase(generatorOptions);
+
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }

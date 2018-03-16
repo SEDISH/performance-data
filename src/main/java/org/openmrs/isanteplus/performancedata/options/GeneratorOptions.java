@@ -6,6 +6,7 @@ import org.openmrs.isanteplus.performancedata.options.service.CommandReader;
 import org.openmrs.isanteplus.performancedata.options.util.CommandOption;
 import org.openmrs.isanteplus.performancedata.options.util.CommandConstants;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class GeneratorOptions {
 
     private DbName dbName;
 
+    private StartDateOption startDate;
+
     public GeneratorOptions(String[] args) {
         commandReader = new CommandReader(args);
         clinics = new ClinicOption();
@@ -35,6 +38,7 @@ public class GeneratorOptions {
         dbLogin = new DbLoginOption();
         dbServer = new DbServerOption();
         dbPort = new DbPortOption();
+        startDate = new StartDateOption();
 
         setOptions();
         checkObligatoryOptions();
@@ -62,6 +66,10 @@ public class GeneratorOptions {
 
     public String getDbPort() {
         return dbPort.getPort();
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate.getStartDate();
     }
 
     public String getDbName() {
@@ -92,6 +100,9 @@ public class GeneratorOptions {
                     break;
                 case CommandConstants.DB_NAME:
                     dbName = new DbName(option.getValue());
+                    break;
+                case CommandConstants.START_DATE:
+                    startDate.setStartDate(option.getValue());
                     break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +

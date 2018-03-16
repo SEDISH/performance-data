@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Set;
 
 public class Inserter {
 
@@ -29,10 +30,10 @@ public class Inserter {
         connector.disconnect();
     }
 
-    public void insertEntities(List<AbstractEntity> entities) {
+    public void insertEntities(Set<AbstractEntity> entities) {
 
         if (!CollectionUtils.isEmpty(entities)) {
-            String sql = entities.get(0).getPreparedSql();
+            String sql = entities.iterator().next().getPreparedSql();
 
             SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(entities.toArray());
             NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
