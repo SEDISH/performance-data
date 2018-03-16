@@ -20,12 +20,12 @@ public class ParamData {
 
     public ParamData(LocalDateTime start) {
         param = true;
-        paramBy = UserEnum.SYS_ADMIN_ID.getId();
+        paramBy = UserEnum.SYS_ADMIN.getId();
         dateParam = RandUtil.getLocalDateTime(start);
         paramReason = RandUtil.getString();
     }
 
     public long getParam() {
-        return (param) ? 1L : 0L;
+        return param ? 1L : 0L;
     }
 }

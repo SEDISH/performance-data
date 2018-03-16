@@ -14,20 +14,25 @@ import java.util.Set;
 public class GeneratorService {
 
     @Inject
-    private PatientGeneratorService patientService;
+    private PatientGeneratorService patientGeneratorService;
 
-    public void genereteDatabase(GeneratorOptions options) throws SQLException {
-
+    public void generateDatabase(GeneratorOptions options) throws SQLException {
         Inserter ins = new Inserter(options);
-        ins.connect();
 
         try {
-            Set<AbstractEntity> patients = patientService.generateEntities(options.getPatients(),
-                    options.getStartDate(), ins);
-            ins.insertEntities(patients);
+            ins.connect();
+
+            for (long i = 0; i < options.getClinics(); i++) {
+                generateClinicData(options, ins);
+            }
         } finally {
             ins.disconnect();
         }
     }
 
+    private void generateClinicData(GeneratorOptions options, Inserter ins) {
+        Set<AbstractEntity> patients = patientGeneratorService.generateEntities(
+                options.getPatients(), options.getStartDate(), ins);
+        ins.insertEntities(patients);
+    }
 }

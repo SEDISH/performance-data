@@ -1,8 +1,8 @@
 package org.openmrs.isanteplus.performancedata.generator.predefined;
 
 public enum UserEnum {
-    ADMIN_ID(1L),  DAEMON_ID(2L), CLERK_ID(3L), NURSE_ID(3L), DOCTOR_ID(5L), SYS_ADMIN_ID(6L),
-    SCHEDULER_ID(7L);
+    ADMIN(1L),  DAEMON(2L), CLERK(3L), NURSE(3L), DOCTOR(5L), SYS_ADMIN(6L),
+    SCHEDULER(7L);
 
     private final long id;
 

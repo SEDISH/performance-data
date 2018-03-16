@@ -48,7 +48,7 @@ public class PersonGeneratorService implements EntityGeneratorService {
                 .dead(0L)
                 .deathDate(null)
                 .causeOfDeath(conceptId)
-                .creator(UserEnum.ADMIN_ID.getId())
+                .creator(UserEnum.ADMIN.getId())
                 .dateCreated(startDate)
                 .changedBy(changeInfo.getParamBy())
                 .dateChanged(changeInfo.getDateParam())

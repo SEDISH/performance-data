@@ -42,7 +42,7 @@ public class PatientGeneratorService implements EntityGeneratorService {
 
         return Patient.builder()
                 .id(id)
-                .creator(UserEnum.ADMIN_ID.getId())
+                .creator(UserEnum.ADMIN.getId())
                 .dateCreated(startDate)
                 .changedBy(changeInfo.getParamBy())
                 .dateChanged(changeInfo.getDateParam())

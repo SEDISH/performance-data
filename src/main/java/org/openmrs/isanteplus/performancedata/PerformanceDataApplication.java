@@ -28,7 +28,7 @@ public class PerformanceDataApplication {
                 GeneratorOptions generatorOptions = new GeneratorOptions(args);
                 System.out.println(generatorOptions.toString());
 
-                generatorService.genereteDatabase(generatorOptions);
+                generatorService.generateDatabase(generatorOptions);
 
             } catch (Exception e) {
                 System.err.println(e.getMessage());
