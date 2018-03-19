@@ -1,6 +1,7 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.service.impl.PatientGeneratorService;
+import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
 import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
@@ -31,8 +32,11 @@ public class GeneratorService {
     }
 
     private void generateClinicData(GeneratorOptions options, Inserter ins) {
-        Set<AbstractEntity> patients = patientGeneratorService.generateEntities(
-                options.getPatients(), options.getStartDate(), ins);
-        ins.insertEntities(patients);
+        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatients(), 500);
+        while (chunkKeeper.hasNext()) {
+            Set<AbstractEntity> patients = patientGeneratorService.generateEntities(
+                    chunkKeeper.getChunk(), options.getStartDate(), ins);
+            ins.insertEntities(patients);
+        }
     }
 }
