@@ -5,6 +5,7 @@ import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
 import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -13,6 +14,9 @@ import java.util.Set;
 
 @Service
 public class GeneratorService {
+
+    @Value("${generator.chunks.patient.size}")
+    private long patientChunkSize;
 
     @Inject
     private PatientGeneratorService patientGeneratorService;
@@ -32,7 +36,7 @@ public class GeneratorService {
     }
 
     private void generateClinicData(GeneratorOptions options, Inserter ins) {
-        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatients(), 500);
+        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatients(), patientChunkSize);
         while (chunkKeeper.hasNext()) {
             Set<AbstractEntity> patients = patientGeneratorService.generateEntities(
                     chunkKeeper.getChunk(), options.getStartDate(), ins);
