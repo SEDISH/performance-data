@@ -7,6 +7,7 @@ import org.openmrs.isanteplus.performancedata.options.model.DbName;
 import org.openmrs.isanteplus.performancedata.options.model.DbPasswordOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbPortOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbServerOption;
+import org.openmrs.isanteplus.performancedata.options.model.EncounterOption;
 import org.openmrs.isanteplus.performancedata.options.model.PatientOption;
 import org.openmrs.isanteplus.performancedata.options.model.StartDateOption;
 import org.openmrs.isanteplus.performancedata.options.model.VisitOption;
@@ -41,6 +42,8 @@ public class GeneratorOptions {
 
     private VisitOption visitOption;
 
+    private EncounterOption encounterOption;
+
     public GeneratorOptions(String[] args) {
         commandReader = new CommandReader(args);
         clinics = new ClinicOption();
@@ -50,6 +53,7 @@ public class GeneratorOptions {
         dbPort = new DbPortOption();
         startDate = new StartDateOption();
         visitOption = new VisitOption();
+        encounterOption = new EncounterOption();
 
         setOptions();
         checkObligatoryOptions();
@@ -91,6 +95,10 @@ public class GeneratorOptions {
         return visitOption.getVisits();
     }
 
+    public long getEncounters() {
+        return encounterOption.getEncounters();
+    }
+
     private void setOptions() {
         List<CommandOption> options = commandReader.parseOptions();
         for (CommandOption option : options) {
@@ -121,6 +129,9 @@ public class GeneratorOptions {
                     break;
                 case CommandConstants.VISITS_AMOUNT:
                     visitOption.setVisits(Long.parseLong(option.getValue()));
+                    break;
+                case CommandConstants.ENCOUNTERS_AMOUNT:
+                    encounterOption.setEncounters(Long.parseLong(option.getValue()));
                     break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +

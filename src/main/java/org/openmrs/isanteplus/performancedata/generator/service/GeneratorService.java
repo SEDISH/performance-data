@@ -1,6 +1,7 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
+import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Person;
 import org.openmrs.isanteplus.performancedata.model.Visit;
@@ -29,6 +30,9 @@ public class GeneratorService {
     @Inject
     private VisitGeneratorService visitGeneratorService;
 
+    @Inject
+    private EncounterGeneratorService encounterGeneratorService;
+
     public void generateDatabase(GeneratorOptions options) throws SQLException {
         Inserter ins = new Inserter(options);
 
@@ -53,6 +57,8 @@ public class GeneratorService {
 
             addVisitationDataToChunk(options, dataChunk);
 
+            addEncounterDataToChunk(options, dataChunk);
+
             dataChunk.insertAll(ins);
         }
     }
@@ -74,6 +80,15 @@ public class GeneratorService {
                     patient, options.getVisits(), options.getStartDate());
 
             dataChunk.addAllVisits(visits);
+        }
+    }
+
+    private void addEncounterDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
+        for (Visit visit : dataChunk.getVisits()) {
+            Set<Encounter> encounters = encounterGeneratorService.generateEntities(
+                    visit, options.getEncounters(), options.getStartDate());
+
+            dataChunk.addAllEncounters(encounters);
         }
     }
 }

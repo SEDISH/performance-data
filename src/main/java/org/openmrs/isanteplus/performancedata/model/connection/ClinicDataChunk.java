@@ -1,6 +1,7 @@
 package org.openmrs.isanteplus.performancedata.model.connection;
 
 import lombok.Getter;
+import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Person;
 import org.openmrs.isanteplus.performancedata.model.Visit;
@@ -18,10 +19,13 @@ public class ClinicDataChunk {
 
     private Set<Visit> visits;
 
+    private Set<Encounter> encounters;
+
     public ClinicDataChunk() {
         people = new HashSet<>();
         patients = new HashSet<>();
         visits = new HashSet<>();
+        encounters = new HashSet<>();
     }
 
     public void addPerson(Person person) {
@@ -48,9 +52,18 @@ public class ClinicDataChunk {
         this.visits.addAll(visits);
     }
 
+    public void addEncounter(Encounter encounter) {
+        encounters.add(encounter);
+    }
+
+    public void addAllEncounters(Collection<Encounter> encounters) {
+        this.encounters.addAll(encounters);
+    }
+
     public void insertAll(Inserter ins) {
         ins.insertEntities(new HashSet<>(people));
         ins.insertEntities(new HashSet<>(patients));
         ins.insertEntities(new HashSet<>(visits));
+        ins.insertEntities(new HashSet<>(encounters));
     }
 }
