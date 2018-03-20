@@ -19,7 +19,7 @@ public class PerformanceDataApplication {
     }
 
     @Inject
-    GeneratorService generatorService;
+    private GeneratorService generatorService;
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {

@@ -1,35 +1,34 @@
-package org.openmrs.isanteplus.performancedata.generator.service.impl;
+package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.LocationEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.UserEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.VisitTypeEnum;
-import org.openmrs.isanteplus.performancedata.generator.service.ChildEntityGeneratorService;
 import org.openmrs.isanteplus.performancedata.generator.util.IdUtil;
 import org.openmrs.isanteplus.performancedata.generator.util.ParamData;
 import org.openmrs.isanteplus.performancedata.generator.util.RandUtil;
-import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
+import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Visit;
 
-import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class VisitGeneratorService  implements ChildEntityGeneratorService {
+public class VisitGeneratorService {
 
-    @Override
-    public ClinicDataChunk generateEntities(AbstractEntity parent, long amount,
-                                            LocalDateTime startDate,
-                                            ClinicDataChunk dataChunk) {
+    public Set<Visit> generateEntities(Patient parent, long amount, LocalDateTime startDate) {
+        Set<Visit> visits = new HashSet<>();
+
         for (long i = 0; i < amount; i++) {
-            dataChunk.addVisit(generateVisit(parent.getId(), startDate));
+            visits.add(generateVisit(parent.getId(), startDate));
         }
 
-        return dataChunk;
+        return visits;
     }
 
     private Visit generateVisit(long parentId, LocalDateTime startDate) {

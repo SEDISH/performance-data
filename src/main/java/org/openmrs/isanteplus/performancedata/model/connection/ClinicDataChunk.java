@@ -12,24 +12,24 @@ import java.util.Set;
 @Getter
 public class ClinicDataChunk {
 
-    private Set<Person> persons;
+    private Set<Person> people;
 
     private Set<Patient> patients;
 
     private Set<Visit> visits;
 
     public ClinicDataChunk() {
-        persons = new HashSet<>();
+        people = new HashSet<>();
         patients = new HashSet<>();
         visits = new HashSet<>();
     }
 
     public void addPerson(Person person) {
-        persons.add(person);
+        people.add(person);
     }
 
-    public void addAllPersons(Collection<Person> persons) {
-        this.persons.addAll(persons);
+    public void addAllPeople(Collection<Person> persons) {
+        this.people.addAll(persons);
     }
 
     public void addPatient(Patient patient) {
@@ -49,7 +49,7 @@ public class ClinicDataChunk {
     }
 
     public void insertAll(Inserter ins) {
-        ins.insertEntities(new HashSet<>(persons));
+        ins.insertEntities(new HashSet<>(people));
         ins.insertEntities(new HashSet<>(patients));
         ins.insertEntities(new HashSet<>(visits));
     }

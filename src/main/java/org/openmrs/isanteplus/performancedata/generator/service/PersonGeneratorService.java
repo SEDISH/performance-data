@@ -1,32 +1,32 @@
-package org.openmrs.isanteplus.performancedata.generator.service.impl;
+package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.UserEnum;
-import org.openmrs.isanteplus.performancedata.generator.service.EntityGeneratorService;
 import org.openmrs.isanteplus.performancedata.generator.util.IdUtil;
 import org.openmrs.isanteplus.performancedata.generator.util.RandUtil;
 import org.openmrs.isanteplus.performancedata.generator.util.ParamData;
 import org.openmrs.isanteplus.performancedata.model.Person;
-import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class PersonGeneratorService implements EntityGeneratorService {
+public class PersonGeneratorService {
 
-    @Override
-    public ClinicDataChunk generateEntities(long amount, LocalDateTime startDate,
-                                            ClinicDataChunk dataChunk) {
+    public Set<Person> generateEntities(long amount, LocalDateTime startDate) {
+        Set<Person> people = new HashSet<>();
+
         for (long i = 0; i < amount; i++) {
-            dataChunk.addPerson(generatePerson(IdUtil.getPersonId(), ConceptEnum.GUARDING.getId(),
+            people.add(generatePerson(IdUtil.getPersonId(), ConceptEnum.GUARDING.getId(),
                     startDate));
         }
 
-        return dataChunk;
+        return people;
     }
 
     private Person generatePerson(long id, long conceptId, LocalDateTime startDate) {
