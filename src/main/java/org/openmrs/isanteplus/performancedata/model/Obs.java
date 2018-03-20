@@ -1,6 +1,5 @@
 package org.openmrs.isanteplus.performancedata.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,8 +9,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 public class Obs extends AbstractEntity {
 
     private static final String PREPARED_SQL = "insert into patient" +
@@ -21,14 +18,12 @@ public class Obs extends AbstractEntity {
             "value_modifier, value_text, value_complex, comments, creator, date_created, " +
             "voided, voided_by, date_voided, void_reason, uuid, previous_version, " +
             "form_namespace_and_path)" +
-            " values (:obsId, :personId, :conceptId, :encounterId, :orderId, :obsDatetime," +
+            " values (:id, :personId, :conceptId, :encounterId, :orderId, :obsDatetime," +
             " :locationId, :obsGroupId, :accessionNumber, :valueGroupId, :valueCoded," +
             " :valueCodedNameId, :valueDrug, :valueDatetime, :valueNumeric, :valueModifier," +
             " :valueText, :valueComplex, :comments, :creator, :dateCreated, :voided," +
             " :voidedBy, :dateVoided, :voidReason, :uuid, :previousVersion," +
             " :formNamespaceAndPath)";
-
-    private long obsId;
 
     private long personId;
 
@@ -87,5 +82,44 @@ public class Obs extends AbstractEntity {
     @Override
     public String getPreparedSql() {
         return PREPARED_SQL;
+    }
+
+    @Builder
+    public Obs(long id, long personId, long conceptId, long encounterId, long orderId,
+               LocalDateTime obsDatetime, long locationId, long obsGroupId,
+               String accessionNumber, long valueGroupId, long valueCoded,
+               long valueCodedNameId, long valueDrug, LocalDateTime valueDatetime,
+               double valueNumeric, String valueModifier, String valueText, String valueComplex,
+               String comments, long creator, LocalDateTime dateCreated, long voided,
+               long voidedBy, LocalDateTime dateVoided, String voidReason, UUID uuid,
+               long previousVersion, String formNamespaceAndPath) {
+        super(id);
+        this.personId = personId;
+        this.conceptId = conceptId;
+        this.encounterId = encounterId;
+        this.orderId = orderId;
+        this.obsDatetime = obsDatetime;
+        this.locationId = locationId;
+        this.obsGroupId = obsGroupId;
+        this.accessionNumber = accessionNumber;
+        this.valueGroupId = valueGroupId;
+        this.valueCoded = valueCoded;
+        this.valueCodedNameId = valueCodedNameId;
+        this.valueDrug = valueDrug;
+        this.valueDatetime = valueDatetime;
+        this.valueNumeric = valueNumeric;
+        this.valueModifier = valueModifier;
+        this.valueText = valueText;
+        this.valueComplex = valueComplex;
+        this.comments = comments;
+        this.creator = creator;
+        this.dateCreated = dateCreated;
+        this.voided = voided;
+        this.voidedBy = voidedBy;
+        this.dateVoided = dateVoided;
+        this.voidReason = voidReason;
+        this.uuid = uuid;
+        this.previousVersion = previousVersion;
+        this.formNamespaceAndPath = formNamespaceAndPath;
     }
 }

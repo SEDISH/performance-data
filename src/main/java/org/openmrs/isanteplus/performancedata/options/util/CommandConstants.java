@@ -10,6 +10,7 @@ public final class CommandConstants {
     public static final String DB_SERVER = "db-server";
     public static final String DB_PORT = "db-port";
     public static final String DB_NAME = "db-name";
+    public static final String START_DATE = "start-date";
 
     private CommandConstants() {
     }
