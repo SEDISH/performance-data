@@ -1,5 +1,6 @@
 package org.openmrs.isanteplus.performancedata.generator.util;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -9,8 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class RandUtil {
 
-    private static final ZoneOffset offset = ZoneOffset.ofHours(1);
-    private static final int nanoSec = 0;
+    private static final ZoneOffset offset = ZoneOffset.ofHours(0);
 
     public static String getString() {
         String uuid = UUID.randomUUID().toString();
@@ -27,15 +27,27 @@ public final class RandUtil {
         return random.nextBoolean();
     }
 
-    public static LocalDateTime getLocalDateTime(LocalDateTime start) {
-        LocalDateTime minDate = Optional.ofNullable(start)
-                .orElse(LocalDateTime.of(1970, 1, 1, 0,0));
+    public static LocalDateTime getDateFromStartToNow(LocalDateTime start) {
+        return getLocalDateTime(start, LocalDateTime.now());
+    }
 
-        long minDay = minDate.toEpochSecond(offset);
-        long maxDay = LocalDateTime.now().toEpochSecond(offset);
-        long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+    public static LocalDateTime getDateFromStartToNextDay(LocalDateTime startDate) {
+        return getLocalDateTime(startDate, startDate.plusDays(1));
+    }
 
-        return LocalDateTime.ofEpochSecond(randomDay, nanoSec, offset);
+    public static LocalDateTime getDateFromStartToEnd(LocalDateTime startDate,
+                                                      LocalDateTime endDate) {
+        return getLocalDateTime(startDate, endDate);
+    }
+
+    private static LocalDateTime getLocalDateTime(LocalDateTime startDate, LocalDateTime endDate) {
+        Instant min = startDate.toInstant(offset);
+        Instant max = endDate.toInstant(offset);
+
+        long randomDay = ThreadLocalRandom.current().nextLong(min.toEpochMilli(),
+                max.toEpochMilli());
+
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomDay), offset);
     }
 
     private RandUtil(){

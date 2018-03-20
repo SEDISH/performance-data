@@ -47,7 +47,7 @@ public class Visit extends AbstractEntity {
 
     private String voidReason;
 
-    private UUID uuid;
+    private String uuid;
 
     @Override
     public String getPreparedSql() {
@@ -59,7 +59,7 @@ public class Visit extends AbstractEntity {
                  LocalDateTime dateStopped, long indicationConceptId, long locationId,
                  long creator, LocalDateTime dateCreated, long changedBy,
                  LocalDateTime dateChanged, long voided, long voidedBy, LocalDateTime dateVoided,
-                 String voidReason, UUID uuid) {
+                 String voidReason, String uuid) {
         super(id);
         this.patientId = patientId;
         this.visitTypeId = visitTypeId;

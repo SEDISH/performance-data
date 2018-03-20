@@ -21,7 +21,7 @@ public class ParamData {
     public ParamData(LocalDateTime start) {
         param = true;
         paramBy = UserEnum.SYS_ADMIN.getId();
-        dateParam = RandUtil.getLocalDateTime(start);
+        dateParam = RandUtil.getDateFromStartToNow(start);
         paramReason = RandUtil.getString();
     }
 

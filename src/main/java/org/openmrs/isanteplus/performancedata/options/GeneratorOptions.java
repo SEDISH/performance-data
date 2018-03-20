@@ -9,6 +9,7 @@ import org.openmrs.isanteplus.performancedata.options.model.DbPortOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbServerOption;
 import org.openmrs.isanteplus.performancedata.options.model.PatientOption;
 import org.openmrs.isanteplus.performancedata.options.model.StartDateOption;
+import org.openmrs.isanteplus.performancedata.options.model.VisitOption;
 import org.openmrs.isanteplus.performancedata.options.service.CommandReader;
 import org.openmrs.isanteplus.performancedata.options.util.CommandOption;
 import org.openmrs.isanteplus.performancedata.options.util.CommandConstants;
@@ -38,6 +39,8 @@ public class GeneratorOptions {
 
     private StartDateOption startDate;
 
+    private VisitOption visitOption;
+
     public GeneratorOptions(String[] args) {
         commandReader = new CommandReader(args);
         clinics = new ClinicOption();
@@ -46,6 +49,7 @@ public class GeneratorOptions {
         dbServer = new DbServerOption();
         dbPort = new DbPortOption();
         startDate = new StartDateOption();
+        visitOption = new VisitOption();
 
         setOptions();
         checkObligatoryOptions();
@@ -83,6 +87,10 @@ public class GeneratorOptions {
         return Optional.ofNullable(dbName.getName()).orElse(null);
     }
 
+    public long getVisits() {
+        return visitOption.getVisits();
+    }
+
     private void setOptions() {
         List<CommandOption> options = commandReader.parseOptions();
         for (CommandOption option : options) {
@@ -110,6 +118,9 @@ public class GeneratorOptions {
                     break;
                 case CommandConstants.START_DATE:
                     startDate.setStartDate(option.getValue());
+                    break;
+                case CommandConstants.VISITS_AMOUNT:
+                    visitOption.setVisits(Long.parseLong(option.getValue()));
                     break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +

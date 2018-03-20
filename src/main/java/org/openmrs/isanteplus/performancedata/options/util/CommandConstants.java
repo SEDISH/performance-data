@@ -11,6 +11,7 @@ public final class CommandConstants {
     public static final String DB_PORT = "db-port";
     public static final String DB_NAME = "db-name";
     public static final String START_DATE = "start-date";
+    public static final String VISITS_AMOUNT = "visits";
 
     private CommandConstants() {
     }
