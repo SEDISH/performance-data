@@ -1,9 +1,10 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
-import org.openmrs.isanteplus.performancedata.generator.service.impl.PatientGeneratorService;
-import org.openmrs.isanteplus.performancedata.generator.service.impl.VisitGeneratorService;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
-import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
+import org.openmrs.isanteplus.performancedata.model.Patient;
+import org.openmrs.isanteplus.performancedata.model.Person;
+import org.openmrs.isanteplus.performancedata.model.Visit;
+import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
 import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +20,8 @@ public class GeneratorService {
     @Value("${generator.chunks.patient.size}")
     private long patientChunkSize;
 
-    @Value("${generator.chunks.visit.size}")
-    private long visitChunkSize;
+    @Inject
+    private PersonGeneratorService personGeneratorService;
 
     @Inject
     private PatientGeneratorService patientGeneratorService;
@@ -44,24 +45,35 @@ public class GeneratorService {
 
     private void generateClinicData(GeneratorOptions options, Inserter ins) {
         ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatients(), patientChunkSize);
-        while (chunkKeeper.hasNext()) {
-            Set<AbstractEntity> patients = patientGeneratorService.generateEntities(
-                    chunkKeeper.getChunk(), options.getStartDate(), ins);
-            ins.insertEntities(patients);
 
-            generateVisitationData(patients, options, ins);
+        while (chunkKeeper.hasNext()) {
+            ClinicDataChunk dataChunk = new ClinicDataChunk();
+
+            addPatientsDataToChunk(chunkKeeper.getChunk(), options, dataChunk);
+
+            addVisitationDataToChunk(options, dataChunk);
+
+            dataChunk.insertAll(ins);
         }
     }
 
-    private void generateVisitationData(Set<AbstractEntity> patients, GeneratorOptions options,
-                                       Inserter ins) {
-        for (AbstractEntity entity : patients) {
-            ChunkKeeper chunkKeeper = new ChunkKeeper(options.getVisits(), visitChunkSize);
-            while (chunkKeeper.hasNext()) {
-                Set<AbstractEntity> visits = visitGeneratorService.generateEntities(
-                        entity, chunkKeeper.getChunk(), options.getStartDate(), ins);
-                ins.insertEntities(visits);
-            }
+    private void addPatientsDataToChunk(long amount, GeneratorOptions options,
+                                        ClinicDataChunk dataChunk) {
+        Set<Person> people = personGeneratorService.generateEntities(amount,
+                options.getStartDate());
+        dataChunk.addAllPeople(people);
+
+        Set<Patient> patients = patientGeneratorService.generateEntities(
+                options.getStartDate(), people);
+        dataChunk.addAllPatients(patients);
+    }
+
+    private void addVisitationDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
+        for (Patient patient : dataChunk.getPatients()) {
+            Set<Visit> visits = visitGeneratorService.generateEntities(
+                    patient, options.getVisits(), options.getStartDate());
+
+            dataChunk.addAllVisits(visits);
         }
     }
 }

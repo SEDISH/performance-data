@@ -1,16 +1,15 @@
-package org.openmrs.isanteplus.performancedata.generator.service.impl;
+package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.LocationEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.UserEnum;
 import org.openmrs.isanteplus.performancedata.generator.predefined.VisitTypeEnum;
-import org.openmrs.isanteplus.performancedata.generator.service.ChildEntityGeneratorService;
 import org.openmrs.isanteplus.performancedata.generator.util.IdUtil;
 import org.openmrs.isanteplus.performancedata.generator.util.ParamData;
 import org.openmrs.isanteplus.performancedata.generator.util.RandUtil;
-import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
+import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Visit;
-import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,18 +19,16 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class VisitGeneratorService  implements ChildEntityGeneratorService {
+public class VisitGeneratorService {
 
-    @Override
-    public Set<AbstractEntity> generateEntities(AbstractEntity parent, long amount,
-                                                LocalDateTime startDate, Inserter ins) {
+    public Set<Visit> generateEntities(Patient parent, long amount, LocalDateTime startDate) {
         Set<Visit> visits = new HashSet<>();
 
         for (long i = 0; i < amount; i++) {
             visits.add(generateVisit(parent.getId(), startDate));
         }
 
-        return new HashSet<>(visits);
+        return visits;
     }
 
     private Visit generateVisit(long parentId, LocalDateTime startDate) {
