@@ -10,28 +10,26 @@ import org.openmrs.isanteplus.performancedata.generator.util.ParamData;
 import org.openmrs.isanteplus.performancedata.generator.util.RandUtil;
 import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
 import org.openmrs.isanteplus.performancedata.model.Visit;
-import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
+
+import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class VisitGeneratorService  implements ChildEntityGeneratorService {
 
     @Override
-    public Set<AbstractEntity> generateEntities(AbstractEntity parent, long amount,
-                                                LocalDateTime startDate, Inserter ins) {
-        Set<Visit> visits = new HashSet<>();
-
+    public ClinicDataChunk generateEntities(AbstractEntity parent, long amount,
+                                            LocalDateTime startDate,
+                                            ClinicDataChunk dataChunk) {
         for (long i = 0; i < amount; i++) {
-            visits.add(generateVisit(parent.getId(), startDate));
+            dataChunk.addVisit(generateVisit(parent.getId(), startDate));
         }
 
-        return new HashSet<>(visits);
+        return dataChunk;
     }
 
     private Visit generateVisit(long parentId, LocalDateTime startDate) {

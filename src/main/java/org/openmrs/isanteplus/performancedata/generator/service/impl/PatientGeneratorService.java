@@ -6,14 +6,12 @@ import org.openmrs.isanteplus.performancedata.generator.util.ParamData;
 import org.openmrs.isanteplus.performancedata.generator.util.RandUtil;
 import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
 import org.openmrs.isanteplus.performancedata.model.Patient;
-import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
+import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class PatientGeneratorService implements EntityGeneratorService {
@@ -22,17 +20,16 @@ public class PatientGeneratorService implements EntityGeneratorService {
     private PersonGeneratorService personService;
 
     @Override
-    public Set<AbstractEntity> generateEntities(long amount, LocalDateTime startDate, Inserter ins) {
-        Set<Patient> patients = new HashSet<>();
+    public ClinicDataChunk generateEntities(long amount, LocalDateTime startDate,
+                                                ClinicDataChunk dataChunk) {
 
-        Set<AbstractEntity> persons = personService.generateEntities(amount, startDate, ins);
-        ins.insertEntities(new HashSet<>(persons));
+        dataChunk = personService.generateEntities(amount, startDate, dataChunk);
 
-        for (AbstractEntity person : persons) {
-            patients.add(generatePatient(person.getId(), startDate));
+        for (AbstractEntity person : dataChunk.getPersons()) {
+            dataChunk.addPatient(generatePatient(person.getId(), startDate));
         }
 
-        return new HashSet<>(patients);
+        return dataChunk;
     }
 
     private Patient generatePatient(long id, LocalDateTime startDate) {
