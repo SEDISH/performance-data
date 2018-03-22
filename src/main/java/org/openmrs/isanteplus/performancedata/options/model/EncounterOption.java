@@ -6,17 +6,17 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class EncounterOption {
-    private static final long ENCOUNTERS = 1;
+    private static final long ENCOUNTER_NUMBER = 1;
 
     @Getter
     @Setter
-    private long encountersAmount;
+    private long encounterNumber;
 
     public EncounterOption() {
-        this.encountersAmount = ENCOUNTERS;
+        this.encounterNumber = ENCOUNTER_NUMBER;
     }
 
-    public static long getDefaultEncounters() {
-        return ENCOUNTERS;
+    public static long getDefaultEncounterNumber() {
+        return ENCOUNTER_NUMBER;
     }
 }

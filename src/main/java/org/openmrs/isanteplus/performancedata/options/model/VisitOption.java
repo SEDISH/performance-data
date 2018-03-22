@@ -6,17 +6,17 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class VisitOption {
-    private static final long VISITS = 47;
+    private static final long VISIT_NUMBER = 47;
 
     @Getter
     @Setter
-    private long visits;
+    private long visitNumber;
 
     public VisitOption() {
-        this.visits = VISITS;
+        this.visitNumber = VISIT_NUMBER;
     }
 
-    public static long getDefaultVisits() {
-        return VISITS;
+    public static long getDefaultVisitNumber() {
+        return VISIT_NUMBER;
     }
 }

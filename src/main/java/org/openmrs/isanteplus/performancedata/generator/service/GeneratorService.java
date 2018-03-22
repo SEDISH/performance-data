@@ -39,7 +39,7 @@ public class GeneratorService {
         try {
             ins.connect();
 
-            for (long i = 0; i < options.getClinics(); i++) {
+            for (long i = 0; i < options.getClinicNumber(); i++) {
                 generateClinicData(options, ins);
             }
         } finally {
@@ -48,7 +48,7 @@ public class GeneratorService {
     }
 
     private void generateClinicData(GeneratorOptions options, Inserter ins) {
-        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatients(), patientChunkSize);
+        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatientNumber(), patientChunkSize);
 
         while (chunkKeeper.hasNext()) {
             ClinicDataChunk dataChunk = new ClinicDataChunk();
@@ -77,7 +77,7 @@ public class GeneratorService {
     private void addVisitationDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Patient patient : dataChunk.getPatients()) {
             Set<Visit> visits = visitGeneratorService.generateEntities(
-                    patient, options.getVisits(), options.getStartDate());
+                    patient, options.getVisitNumber(), options.getStartDate());
 
             dataChunk.addAllVisits(visits);
         }
@@ -86,7 +86,7 @@ public class GeneratorService {
     private void addEncounterDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Visit visit : dataChunk.getVisits()) {
             Set<Encounter> encounters = encounterGeneratorService.generateEntities(
-                    visit, options.getEncounters(), options.getStartDate());
+                    visit, options.getEncounterNumber(), options.getStartDate());
 
             dataChunk.addAllEncounters(encounters);
         }

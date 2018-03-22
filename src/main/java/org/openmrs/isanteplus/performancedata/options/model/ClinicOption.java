@@ -6,17 +6,17 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class ClinicOption {
-    private static final long CLINICS = 140;
+    private static final long CLINIC_NUMBER = 140;
 
     @Getter
     @Setter
-    private long clinics;
+    private long clinicNumber;
 
     public ClinicOption() {
-        this.clinics = CLINICS;
+        this.clinicNumber = CLINIC_NUMBER;
     }
 
-    public static long getDefaultClinics() {
-        return CLINICS;
+    public static long getDefaultClinicNumber() {
+        return CLINIC_NUMBER;
     }
 }
