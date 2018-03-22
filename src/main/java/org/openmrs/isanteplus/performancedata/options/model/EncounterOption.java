@@ -10,10 +10,10 @@ public class EncounterOption {
 
     @Getter
     @Setter
-    private long encounters;
+    private long encountersAmount;
 
     public EncounterOption() {
-        this.encounters = ENCOUNTERS;
+        this.encountersAmount = ENCOUNTERS;
     }
 
     public static long getDefaultEncounters() {

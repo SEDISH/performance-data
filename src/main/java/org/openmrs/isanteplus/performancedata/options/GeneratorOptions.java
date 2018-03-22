@@ -96,7 +96,7 @@ public class GeneratorOptions {
     }
 
     public long getEncounters() {
-        return encounterOption.getEncounters();
+        return encounterOption.getEncountersAmount();
     }
 
     private void setOptions() {
@@ -131,7 +131,7 @@ public class GeneratorOptions {
                     visitOption.setVisits(Long.parseLong(option.getValue()));
                     break;
                 case CommandConstants.ENCOUNTERS_AMOUNT:
-                    encounterOption.setEncounters(Long.parseLong(option.getValue()));
+                    encounterOption.setEncountersAmount(Long.parseLong(option.getValue()));
                     break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +
