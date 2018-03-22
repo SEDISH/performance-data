@@ -1,28 +1,22 @@
 package org.openmrs.isanteplus.performancedata.options.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
 public class VisitOption {
+    private static final long VISIT_NUMBER = 47;
 
-    private static final long VISITS = 20;
-
-    private long visits;
-
-    public VisitOption(long visits) {
-        this.visits = visits;
-    }
+    @Getter
+    @Setter
+    private long visitNumber;
 
     public VisitOption() {
-        this.visits = VISITS;
+        this.visitNumber = VISIT_NUMBER;
     }
 
-    public long getVisits() {
-        return visits;
-    }
-
-    public void setVisits(long visits) {
-        this.visits = visits;
-    }
-
-    public static long getDefaultVisits() {
-        return VISITS;
+    public static long getDefaultVisitNumber() {
+        return VISIT_NUMBER;
     }
 }

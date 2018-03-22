@@ -31,7 +31,7 @@ public class CommandReader {
             if (it.hasNext()) {
                 value = (String)it.next();
             } else {
-                throw new NullPointerException();
+                throw new NullPointerException("Option '" + type + "' has no value");
             }
             result.add(new CommandOption(type, value));
         }

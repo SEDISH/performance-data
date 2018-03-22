@@ -1,28 +1,22 @@
 package org.openmrs.isanteplus.performancedata.options.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
 public class ClinicOption {
+    private static final long CLINIC_NUMBER = 140;
 
-    private static final long CLINICS = 140;
-
-    private long clinics;
-
-    public ClinicOption(long clinics) {
-        this.clinics = clinics;
-    }
+    @Getter
+    @Setter
+    private long clinicNumber;
 
     public ClinicOption() {
-        this.clinics = CLINICS;
+        this.clinicNumber = CLINIC_NUMBER;
     }
 
-    public long getClinics() {
-        return clinics;
-    }
-
-    public void setClinics(long clinics) {
-        this.clinics = clinics;
-    }
-
-    public static long getDefaultClinics() {
-        return CLINICS;
+    public static long getDefaultClinicNumber() {
+        return CLINIC_NUMBER;
     }
 }

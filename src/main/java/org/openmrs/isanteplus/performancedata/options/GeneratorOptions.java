@@ -7,6 +7,7 @@ import org.openmrs.isanteplus.performancedata.options.model.DbName;
 import org.openmrs.isanteplus.performancedata.options.model.DbPasswordOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbPortOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbServerOption;
+import org.openmrs.isanteplus.performancedata.options.model.EncounterOption;
 import org.openmrs.isanteplus.performancedata.options.model.PatientOption;
 import org.openmrs.isanteplus.performancedata.options.model.StartDateOption;
 import org.openmrs.isanteplus.performancedata.options.model.VisitOption;
@@ -41,6 +42,8 @@ public class GeneratorOptions {
 
     private VisitOption visitOption;
 
+    private EncounterOption encounterOption;
+
     public GeneratorOptions(String[] args) {
         commandReader = new CommandReader(args);
         clinics = new ClinicOption();
@@ -50,17 +53,18 @@ public class GeneratorOptions {
         dbPort = new DbPortOption();
         startDate = new StartDateOption();
         visitOption = new VisitOption();
+        encounterOption = new EncounterOption();
 
         setOptions();
         checkObligatoryOptions();
     }
 
-    public long getClinics() {
-        return clinics.getClinics();
+    public long getClinicNumber() {
+        return clinics.getClinicNumber();
     }
 
-    public long getPatients() {
-        return patients.getPatients();
+    public long getPatientNumber() {
+        return patients.getPatientNumber();
     }
 
     public String getDbLogin() {
@@ -87,19 +91,23 @@ public class GeneratorOptions {
         return Optional.ofNullable(dbName.getName()).orElse(null);
     }
 
-    public long getVisits() {
-        return visitOption.getVisits();
+    public long getVisitNumber() {
+        return visitOption.getVisitNumber();
+    }
+
+    public long getEncounterNumber() {
+        return encounterOption.getEncounterNumber();
     }
 
     private void setOptions() {
         List<CommandOption> options = commandReader.parseOptions();
         for (CommandOption option : options) {
             switch(option.getType()) {
-                case CommandConstants.CLINICS_AMOUNT:
-                    clinics.setClinics(Long.parseLong(option.getValue()));
+                case CommandConstants.CLINICS_NUMBER:
+                    clinics.setClinicNumber(Long.parseLong(option.getValue()));
                     break;
-                case CommandConstants.PATIENTS_AMOUNT:
-                    patients.setPatients(Long.parseLong(option.getValue()));
+                case CommandConstants.PATIENTS_NUMBER:
+                    patients.setPatientNumber(Long.parseLong(option.getValue()));
                     break;
                 case CommandConstants.DB_LOGIN:
                     dbLogin.setLogin(option.getValue());
@@ -119,8 +127,11 @@ public class GeneratorOptions {
                 case CommandConstants.START_DATE:
                     startDate.setStartDate(option.getValue());
                     break;
-                case CommandConstants.VISITS_AMOUNT:
-                    visitOption.setVisits(Long.parseLong(option.getValue()));
+                case CommandConstants.VISITS_NUMBER:
+                    visitOption.setVisitNumber(Long.parseLong(option.getValue()));
+                    break;
+                case CommandConstants.ENCOUNTERS_NUMBER:
+                    encounterOption.setEncounterNumber(Long.parseLong(option.getValue()));
                     break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +

@@ -21,8 +21,8 @@ public class GeneratorOptionsTest {
                 "--db-name", "demo" };
         GeneratorOptions generatorOptions = new GeneratorOptions(args);
 
-        assertEquals(12L, generatorOptions.getClinics());
-        assertEquals(15L, generatorOptions.getPatients());
+        assertEquals(12L, generatorOptions.getClinicNumber());
+        assertEquals(15L, generatorOptions.getPatientNumber());
         assertEquals("secret123", generatorOptions.getDbPassword());
         assertEquals("demo", generatorOptions.getDbName());
     }
@@ -33,8 +33,8 @@ public class GeneratorOptionsTest {
                 "--db-name", "demo" };
         GeneratorOptions generatorOptions = new GeneratorOptions(args);
 
-        assertEquals(12L, generatorOptions.getClinics());
-        assertEquals(15L, generatorOptions.getPatients());
+        assertEquals(12L, generatorOptions.getClinicNumber());
+        assertEquals(15L, generatorOptions.getPatientNumber());
         assertEquals("secret123", generatorOptions.getDbPassword());
         assertEquals("demo", generatorOptions.getDbName());
     }
@@ -46,7 +46,7 @@ public class GeneratorOptionsTest {
         GeneratorOptions generatorOptions = new GeneratorOptions(args);
 
         // should throw before the line below
-        assertEquals(12L, generatorOptions.getClinics());
+        assertEquals(12L, generatorOptions.getClinicNumber());
     }
 
     @Test
@@ -54,8 +54,10 @@ public class GeneratorOptionsTest {
         String[] args = { "--db-password", "secret123", "--db-name", "demo" };
         GeneratorOptions generatorOptions = new GeneratorOptions(args);
 
-        Assert.assertEquals(ClinicOption.getDefaultClinics(), generatorOptions.getClinics());
-        Assert.assertEquals(PatientOption.getDefaultPatients(), generatorOptions.getPatients());
+        Assert.assertEquals(ClinicOption.getDefaultClinicNumber(),
+                generatorOptions.getClinicNumber());
+        Assert.assertEquals(PatientOption.getDefaultPatientNumber(),
+                generatorOptions.getPatientNumber());
         assertEquals("secret123", generatorOptions.getDbPassword());
         assertEquals("demo", generatorOptions.getDbName());
     }
@@ -66,7 +68,7 @@ public class GeneratorOptionsTest {
         GeneratorOptions generatorOptions = new GeneratorOptions(args);
 
         // should throw before the line below
-        assertEquals(15L, generatorOptions.getPatients());
+        assertEquals(15L, generatorOptions.getPatientNumber());
     }
 
     @Test(expected = NullPointerException.class)
@@ -75,7 +77,7 @@ public class GeneratorOptionsTest {
         GeneratorOptions generatorOptions = new GeneratorOptions(args);
 
         // should throw before the line below
-        assertEquals(15L, generatorOptions.getPatients());
+        assertEquals(15L, generatorOptions.getPatientNumber());
     }
 
 }
