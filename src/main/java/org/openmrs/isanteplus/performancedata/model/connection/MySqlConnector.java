@@ -49,6 +49,8 @@ public class MySqlConnector {
         dataSource.setUsername(login);
         dataSource.setPassword(password);
         dataSource.addConnectionProperty("useSSL", "false");
+        dataSource.addConnectionProperty("useServerPrepStmts", "false");
+        dataSource.addConnectionProperty("rewriteBatchedStatements", "true");
 
         return dataSource;
     }
