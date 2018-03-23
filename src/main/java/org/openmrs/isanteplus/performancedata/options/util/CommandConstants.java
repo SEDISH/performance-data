@@ -13,6 +13,7 @@ public final class CommandConstants {
     public static final String START_DATE = "start-date";
     public static final String VISITS_NUMBER = "visits";
     public static final String ENCOUNTERS_NUMBER = "encounters";
+    public static final String OBS_NUMBER = "obs";
 
     private CommandConstants() {
     }

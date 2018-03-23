@@ -2,10 +2,11 @@ package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
+import org.openmrs.isanteplus.performancedata.model.Obs;
 import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Person;
 import org.openmrs.isanteplus.performancedata.model.Visit;
-import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
+import org.openmrs.isanteplus.performancedata.model.ClinicDataChunk;
 import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,9 @@ public class GeneratorService {
     @Inject
     private EncounterGeneratorService encounterGeneratorService;
 
+    @Inject
+    private ObsGenerationService obsGenerationService;
+
     public void generateDatabase(GeneratorOptions options) throws SQLException {
         Inserter ins = new Inserter(options);
 
@@ -59,6 +63,8 @@ public class GeneratorService {
 
             addEncounterDataToChunk(options, dataChunk);
 
+            addObsDataToChunk(options, dataChunk);
+
             dataChunk.insertAll(ins);
         }
     }
@@ -69,15 +75,14 @@ public class GeneratorService {
                 options.getStartDate());
         dataChunk.addAllPeople(people);
 
-        Set<Patient> patients = patientGeneratorService.generateEntities(
-                options.getStartDate(), people);
+        Set<Patient> patients = patientGeneratorService.generateEntities(people);
         dataChunk.addAllPatients(patients);
     }
 
     private void addVisitationDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Patient patient : dataChunk.getPatients()) {
             Set<Visit> visits = visitGeneratorService.generateEntities(
-                    patient, options.getVisitNumber(), options.getStartDate());
+                    patient, options.getVisitNumber(), patient.getDateChanged());
 
             dataChunk.addAllVisits(visits);
         }
@@ -86,9 +91,18 @@ public class GeneratorService {
     private void addEncounterDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Visit visit : dataChunk.getVisits()) {
             Set<Encounter> encounters = encounterGeneratorService.generateEntities(
-                    visit, options.getEncounterNumber(), options.getStartDate());
+                    visit, options.getEncounterNumber(), visit.getDateChanged());
 
             dataChunk.addAllEncounters(encounters);
+        }
+    }
+
+    private void addObsDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
+        for (Encounter encounter : dataChunk.getEncounters()) {
+            Set<Obs> observations = obsGenerationService.generateEntities(
+                    encounter, options.getObsNumber(), encounter.getDateChanged());
+
+            dataChunk.addAllObses(observations);
         }
     }
 }

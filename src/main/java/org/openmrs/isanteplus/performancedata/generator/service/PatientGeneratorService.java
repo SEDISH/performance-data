@@ -15,12 +15,12 @@ import java.util.Set;
 @Service
 public class PatientGeneratorService {
 
-    public Set<Patient> generateEntities(LocalDateTime startDate, Set<Person> people) {
+    public Set<Patient> generateEntities(Set<Person> people) {
 
         Set<Patient> patients = new HashSet<>();
 
         for (Person person : people) {
-            patients.add(generatePatient(person.getId(), startDate));
+            patients.add(generatePatient(person.getId(), person.getDateChanged()));
         }
 
         return patients;
