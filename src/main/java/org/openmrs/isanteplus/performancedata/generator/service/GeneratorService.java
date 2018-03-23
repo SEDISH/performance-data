@@ -1,5 +1,6 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
+import me.tongfei.progressbar.ProgressBar;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Obs;
@@ -39,19 +40,24 @@ public class GeneratorService {
 
     public void generateDatabase(GeneratorOptions options) throws SQLException {
         Inserter ins = new Inserter(options);
+        ProgressBar progressBar = new ProgressBar("Generation...",
+                options.getClinicNumber() * options.getPatientNumber());
 
         try {
             ins.connect();
+            progressBar.start();
 
             for (long i = 0; i < options.getClinicNumber(); i++) {
-                generateClinicData(options, ins);
+                generateClinicData(options, ins, progressBar);
             }
         } finally {
+            progressBar.stop();
             ins.disconnect();
         }
     }
 
-    private void generateClinicData(GeneratorOptions options, Inserter ins) {
+    private void generateClinicData(GeneratorOptions options, Inserter ins,
+                                    ProgressBar progressBar) {
         ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatientNumber(), patientChunkSize);
 
         while (chunkKeeper.hasNext()) {
@@ -66,6 +72,7 @@ public class GeneratorService {
             addObsDataToChunk(options, dataChunk);
 
             dataChunk.insertAll(ins);
+            progressBar.stepBy(patientChunkSize);
         }
     }
 
