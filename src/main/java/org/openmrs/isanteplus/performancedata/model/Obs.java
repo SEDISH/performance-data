@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
 public class Obs extends AbstractEntity {
 
-    private static final String PREPARED_SQL = "insert into patient" +
+    private static final String PREPARED_SQL = "insert into obs" +
             " (obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, " +
             "location_id, obs_group_id, accession_number, value_group_id, value_coded," +
-            "value_coded_name_id, value_drug, value_datetime, value_numeric, value_numeric," +
+            "value_coded_name_id, value_drug, value_datetime, value_numeric," +
             "value_modifier, value_text, value_complex, comments, creator, date_created, " +
             "voided, voided_by, date_voided, void_reason, uuid, previous_version, " +
             "form_namespace_and_path)" +
@@ -31,27 +30,27 @@ public class Obs extends AbstractEntity {
 
     private long encounterId;
 
-    private long orderId;
+    private Long orderId;
 
     private LocalDateTime obsDatetime;
 
     private long locationId;
 
-    private long obsGroupId;
+    private Long obsGroupId;
 
     private String accessionNumber;
 
-    private long valueGroupId;
+    private Long valueGroupId;
 
-    private long valueCoded;
+    private Long valueCoded;
 
-    private long valueCodedNameId;
+    private Long valueCodedNameId;
 
-    private long valueDrug;
+    private Long valueDrug;
 
     private LocalDateTime valueDatetime;
 
-    private double valueNumeric;
+    private Double valueNumeric;
 
     private String valueModifier;
 
@@ -73,9 +72,9 @@ public class Obs extends AbstractEntity {
 
     private String voidReason;
 
-    private UUID uuid;
+    private String uuid;
 
-    private long previousVersion;
+    private Long previousVersion;
 
     private String formNamespaceAndPath;
 
@@ -85,14 +84,14 @@ public class Obs extends AbstractEntity {
     }
 
     @Builder
-    public Obs(long id, long personId, long conceptId, long encounterId, long orderId,
-               LocalDateTime obsDatetime, long locationId, long obsGroupId,
-               String accessionNumber, long valueGroupId, long valueCoded,
-               long valueCodedNameId, long valueDrug, LocalDateTime valueDatetime,
-               double valueNumeric, String valueModifier, String valueText, String valueComplex,
+    public Obs(long id, long personId, long conceptId, long encounterId, Long orderId,
+               LocalDateTime obsDatetime, long locationId, Long obsGroupId,
+               String accessionNumber, Long valueGroupId, Long valueCoded,
+               Long valueCodedNameId, Long valueDrug, LocalDateTime valueDatetime,
+               Double valueNumeric, String valueModifier, String valueText, String valueComplex,
                String comments, long creator, LocalDateTime dateCreated, long voided,
-               long voidedBy, LocalDateTime dateVoided, String voidReason, UUID uuid,
-               long previousVersion, String formNamespaceAndPath) {
+               long voidedBy, LocalDateTime dateVoided, String voidReason, String uuid,
+               Long previousVersion, String formNamespaceAndPath) {
         super(id);
         this.personId = personId;
         this.conceptId = conceptId;

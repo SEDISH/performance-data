@@ -8,6 +8,7 @@ import org.openmrs.isanteplus.performancedata.options.model.DbPasswordOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbPortOption;
 import org.openmrs.isanteplus.performancedata.options.model.DbServerOption;
 import org.openmrs.isanteplus.performancedata.options.model.EncounterOption;
+import org.openmrs.isanteplus.performancedata.options.model.ObsOption;
 import org.openmrs.isanteplus.performancedata.options.model.PatientOption;
 import org.openmrs.isanteplus.performancedata.options.model.StartDateOption;
 import org.openmrs.isanteplus.performancedata.options.model.VisitOption;
@@ -44,6 +45,8 @@ public class GeneratorOptions {
 
     private EncounterOption encounterOption;
 
+    private ObsOption obsOption;
+
     public GeneratorOptions(String[] args) {
         commandReader = new CommandReader(args);
         clinics = new ClinicOption();
@@ -54,6 +57,7 @@ public class GeneratorOptions {
         startDate = new StartDateOption();
         visitOption = new VisitOption();
         encounterOption = new EncounterOption();
+        obsOption = new ObsOption();
 
         setOptions();
         checkObligatoryOptions();
@@ -99,6 +103,10 @@ public class GeneratorOptions {
         return encounterOption.getEncounterNumber();
     }
 
+    public long getObsNumber() {
+        return obsOption.getObsNumber();
+    }
+
     private void setOptions() {
         List<CommandOption> options = commandReader.parseOptions();
         for (CommandOption option : options) {
@@ -132,6 +140,9 @@ public class GeneratorOptions {
                     break;
                 case CommandConstants.ENCOUNTERS_NUMBER:
                     encounterOption.setEncounterNumber(Long.parseLong(option.getValue()));
+                    break;
+                case CommandConstants.OBS_NUMBER:
+                    obsOption.setObsNumber(Long.parseLong(option.getValue()));
                     break;
                 default:
                     throw new IllegalArgumentException("There is no option called '" +

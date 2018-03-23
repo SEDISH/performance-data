@@ -38,7 +38,7 @@ public class PersonGeneratorService {
 
         return Person.builder()
                 .id(id)
-                .gender(RandUtil.getString())
+                .gender(RandUtil.getGender())
                 .birthdate(startDate.toLocalDate())
                 .birthdateEstimated(0L)
                 .dead(0L)

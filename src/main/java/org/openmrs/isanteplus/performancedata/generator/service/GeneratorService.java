@@ -1,11 +1,13 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
+import me.tongfei.progressbar.ProgressBar;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
+import org.openmrs.isanteplus.performancedata.model.Obs;
 import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Person;
 import org.openmrs.isanteplus.performancedata.model.Visit;
-import org.openmrs.isanteplus.performancedata.model.connection.ClinicDataChunk;
+import org.openmrs.isanteplus.performancedata.model.ClinicDataChunk;
 import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,21 +35,29 @@ public class GeneratorService {
     @Inject
     private EncounterGeneratorService encounterGeneratorService;
 
+    @Inject
+    private ObsGenerationService obsGenerationService;
+
     public void generateDatabase(GeneratorOptions options) throws SQLException {
         Inserter ins = new Inserter(options);
+        ProgressBar progressBar = new ProgressBar("Generation...",
+                options.getClinicNumber() * options.getPatientNumber());
 
         try {
             ins.connect();
+            progressBar.start();
 
             for (long i = 0; i < options.getClinicNumber(); i++) {
-                generateClinicData(options, ins);
+                generateClinicData(options, ins, progressBar);
             }
         } finally {
+            progressBar.stop();
             ins.disconnect();
         }
     }
 
-    private void generateClinicData(GeneratorOptions options, Inserter ins) {
+    private void generateClinicData(GeneratorOptions options, Inserter ins,
+                                    ProgressBar progressBar) {
         ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatientNumber(), patientChunkSize);
 
         while (chunkKeeper.hasNext()) {
@@ -59,7 +69,10 @@ public class GeneratorService {
 
             addEncounterDataToChunk(options, dataChunk);
 
+            addObsDataToChunk(options, dataChunk);
+
             dataChunk.insertAll(ins);
+            progressBar.stepBy(patientChunkSize);
         }
     }
 
@@ -69,15 +82,14 @@ public class GeneratorService {
                 options.getStartDate());
         dataChunk.addAllPeople(people);
 
-        Set<Patient> patients = patientGeneratorService.generateEntities(
-                options.getStartDate(), people);
+        Set<Patient> patients = patientGeneratorService.generateEntities(people);
         dataChunk.addAllPatients(patients);
     }
 
     private void addVisitationDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Patient patient : dataChunk.getPatients()) {
             Set<Visit> visits = visitGeneratorService.generateEntities(
-                    patient, options.getVisitNumber(), options.getStartDate());
+                    patient, options.getVisitNumber(), patient.getDateChanged());
 
             dataChunk.addAllVisits(visits);
         }
@@ -86,9 +98,18 @@ public class GeneratorService {
     private void addEncounterDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Visit visit : dataChunk.getVisits()) {
             Set<Encounter> encounters = encounterGeneratorService.generateEntities(
-                    visit, options.getEncounterNumber(), options.getStartDate());
+                    visit, options.getEncounterNumber(), visit.getDateChanged());
 
             dataChunk.addAllEncounters(encounters);
+        }
+    }
+
+    private void addObsDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
+        for (Encounter encounter : dataChunk.getEncounters()) {
+            Set<Obs> observations = obsGenerationService.generateEntities(
+                    encounter, options.getObsNumber(), encounter.getDateChanged());
+
+            dataChunk.addAllObses(observations);
         }
     }
 }

@@ -3,7 +3,6 @@ package org.openmrs.isanteplus.performancedata.generator.util;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,6 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class RandUtil {
 
     private static final ZoneOffset offset = ZoneOffset.ofHours(0);
+
+    public static String getGender() {
+        return getBoolean() ? "M" : "F";
+    }
 
     public static String getString() {
         String uuid = UUID.randomUUID().toString();
