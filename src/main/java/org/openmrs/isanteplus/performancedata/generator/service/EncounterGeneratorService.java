@@ -12,16 +12,16 @@ import org.openmrs.isanteplus.performancedata.model.Visit;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class EncounterGeneratorService {
 
-    public Set<Encounter> generateEntities(Visit parent, long amount, LocalDateTime startDate) {
-        Set<Encounter> encounters = new HashSet<>();
+    public List<Encounter> generateEntities(Visit parent, long amount, LocalDateTime startDate) {
+        List<Encounter> encounters = new ArrayList<>();
         for (long i = 0; i < amount; i++) {
             encounters.add(generateEncounter(parent, startDate));
         }

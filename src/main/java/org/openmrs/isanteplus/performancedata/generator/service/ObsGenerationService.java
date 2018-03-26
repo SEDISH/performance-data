@@ -9,16 +9,16 @@ import org.openmrs.isanteplus.performancedata.model.Obs;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ObsGenerationService {
 
-    public Set<Obs> generateEntities(Encounter encounter, long amount,
-                                           LocalDateTime startDate) {
-        Set<Obs> observations = new HashSet<>();
+    public List<Obs> generateEntities(Encounter encounter, long amount,
+                                      LocalDateTime startDate) {
+        List<Obs> observations = new ArrayList<>();
         for (long i = 0; i < amount; i++) {
             observations.add(generateObs(encounter, startDate));
         }

@@ -3,9 +3,6 @@ package org.openmrs.isanteplus.performancedata.model.connection;
 import lombok.Getter;
 import org.apache.commons.dbcp.BasicDataSource;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 public class MySqlConnector {
 
     private String login;
@@ -18,28 +15,20 @@ public class MySqlConnector {
 
     private String dbName;
 
+    private long packetSize;
+
     @Getter
     private BasicDataSource dataSource;
 
-    private Connection connection;
-
     public MySqlConnector(String login, String password, String server, String port,
-                          String dbName) {
+                          String dbName, long packetSize) {
         this.login = login;
         this.password = password;
         this.server = server;
         this.port = port;
         this.dbName = dbName;
+        this.packetSize = packetSize;
         this.dataSource = setDataSource();
-    }
-
-    public void connect() throws SQLException {
-        connection = dataSource.getConnection();
-    }
-
-    public void disconnect() throws SQLException {
-        connection.close();
-        connection = null;
     }
 
     private BasicDataSource setDataSource() {
@@ -49,8 +38,12 @@ public class MySqlConnector {
         dataSource.setUsername(login);
         dataSource.setPassword(password);
         dataSource.addConnectionProperty("useSSL", "false");
-        dataSource.addConnectionProperty("useServerPrepStmts", "false");
+        dataSource.addConnectionProperty("useServerPrepStmts", "true");
         dataSource.addConnectionProperty("rewriteBatchedStatements", "true");
+        dataSource.addConnectionProperty("dontCheckOnDuplicateKeyUpdateInSQL", "true");
+        dataSource.addConnectionProperty("useFastDateParsing", "true");
+        dataSource.addConnectionProperty("maxAllowedPacket", Long.toString(packetSize));
+        //        dataSource.addConnectionProperty("alwaysSendSetIsolation", "false"); todo
 
         return dataSource;
     }

@@ -3,29 +3,29 @@ package org.openmrs.isanteplus.performancedata.model;
 import lombok.Getter;
 import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 public class ClinicDataChunk {
 
-    private Set<Person> people;
+    private List<Person> people;
 
-    private Set<Patient> patients;
+    private List<Patient> patients;
 
-    private Set<Visit> visits;
+    private List<Visit> visits;
 
-    private Set<Encounter> encounters;
+    private List<Encounter> encounters;
 
-    private Set<Obs> observations;
+    private List<Obs> observations;
 
     public ClinicDataChunk() {
-        people = new HashSet<>();
-        patients = new HashSet<>();
-        visits = new HashSet<>();
-        encounters = new HashSet<>();
-        observations = new HashSet<>();
+        people = new ArrayList<>();
+        patients = new ArrayList<>();
+        visits = new ArrayList<>();
+        encounters = new ArrayList<>();
+        observations = new ArrayList<>();
     }
 
     public void addPerson(Person person) {
@@ -69,10 +69,10 @@ public class ClinicDataChunk {
     }
 
     public void insertAll(Inserter ins) {
-        ins.insertEntities(new HashSet<>(people));
-        ins.insertEntities(new HashSet<>(patients));
-        ins.insertEntities(new HashSet<>(visits));
-        ins.insertEntities(new HashSet<>(encounters));
-        ins.insertEntities(new HashSet<>(observations));
+        ins.insertEntities(new ArrayList<>(people));
+        ins.insertEntities(new ArrayList<>(patients));
+        ins.insertEntities(new ArrayList<>(visits));
+        ins.insertEntities(new ArrayList<>(encounters));
+        ins.insertEntities(new ArrayList<>(observations));
     }
 }

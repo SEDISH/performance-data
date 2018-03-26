@@ -1,9 +1,8 @@
 package org.openmrs.isanteplus.performancedata.model.connection;
 
+import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
-
-import java.sql.SQLException;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -11,35 +10,32 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Set;
 
 public class Inserter {
 
     private final MySqlConnector connector;
 
-    public Inserter(GeneratorOptions options) throws SQLException {
+    private final long insertNumber;
+
+    public Inserter(GeneratorOptions options, long insertNumber, long packetSize) {
         this.connector = new MySqlConnector(options.getDbLogin(), options.getDbPassword(),
-                options.getDbServer(), options.getDbPort(), options.getDbName());
+                options.getDbServer(), options.getDbPort(), options.getDbName(), packetSize);
+        this.insertNumber = insertNumber;
     }
 
-    public void connect() throws SQLException {
-        connector.connect();
-    }
-
-    public void disconnect() throws SQLException {
-        connector.disconnect();
-    }
-
-    public void insertEntities(Set<AbstractEntity> entities) {
-
+    public void insertEntities(List<AbstractEntity> entities) {
         if (!CollectionUtils.isEmpty(entities)) {
+            ChunkKeeper chunkKeeper = new ChunkKeeper(entities.size(), insertNumber);
             String sql = entities.iterator().next().getPreparedSql();
 
-            SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(entities.toArray());
-            NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
-                    connector.getDataSource());
+            while (chunkKeeper.hasNext()) {
+                List chunk = chunkKeeper.getChunkFromList(entities);
+                SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(chunk);
+                NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
+                        connector.getDataSource());
 
-            template.batchUpdate(sql, batch);
+                template.batchUpdate(sql, batch);
+            }
         }
     }
 }
