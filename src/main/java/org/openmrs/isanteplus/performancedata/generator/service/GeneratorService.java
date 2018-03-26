@@ -19,8 +19,6 @@ import java.util.List;
 @Service
 public class GeneratorService {
 
-    private static final long ENTITY_SIZE = 500; // todo
-
     @Value("${generator.chunks.patient.number}")
     private long patientChunkNumber;
 
@@ -116,9 +114,5 @@ public class GeneratorService {
 
             dataChunk.addAllObses(observations);
         }
-    }
-
-    private long getInsertNumberFromPacketSize() { //todo
-        return packetSize / ENTITY_SIZE;
     }
 }

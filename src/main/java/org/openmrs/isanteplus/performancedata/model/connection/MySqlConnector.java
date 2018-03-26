@@ -43,7 +43,6 @@ public class MySqlConnector {
         dataSource.addConnectionProperty("dontCheckOnDuplicateKeyUpdateInSQL", "true");
         dataSource.addConnectionProperty("useFastDateParsing", "true");
         dataSource.addConnectionProperty("maxAllowedPacket", Long.toString(packetSize));
-        //        dataSource.addConnectionProperty("alwaysSendSetIsolation", "false"); todo
 
         return dataSource;
     }
