@@ -27,12 +27,12 @@ public class Inserter {
         if (!CollectionUtils.isEmpty(entities)) {
             ChunkKeeper chunkKeeper = new ChunkKeeper(entities.size(), insertNumber);
             String sql = entities.iterator().next().getPreparedSql();
+            NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
+                    connector.getDataSource());
 
             while (chunkKeeper.hasNext()) {
                 List chunk = chunkKeeper.getChunkFromList(entities);
                 SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(chunk);
-                NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
-                        connector.getDataSource());
 
                 template.batchUpdate(sql, batch);
             }
