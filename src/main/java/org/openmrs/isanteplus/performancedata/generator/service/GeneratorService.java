@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.beans.PropertyVetoException;
 import java.util.List;
 
 @Service
@@ -43,7 +44,7 @@ public class GeneratorService {
     @Inject
     private ObsGenerationService obsGenerationService;
 
-    public void generateDatabase(GeneratorOptions options) {
+    public void generateDatabase(GeneratorOptions options) throws PropertyVetoException {
         Inserter ins = new Inserter(options, insertsNumber, packetSize);
         ProgressBar progressBar = new ProgressBar("Generation...",
                 options.getClinicNumber() * options.getPatientNumber());
@@ -55,6 +56,7 @@ public class GeneratorService {
                 generateClinicData(options, ins, progressBar);
             }
         } finally {
+            ins.closePool();
             progressBar.stop();
         }
     }

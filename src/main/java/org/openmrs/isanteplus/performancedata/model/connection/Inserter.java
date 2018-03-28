@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.beans.PropertyVetoException;
 import java.util.List;
 
 public class Inserter {
@@ -17,7 +18,8 @@ public class Inserter {
 
     private final long insertNumber;
 
-    public Inserter(GeneratorOptions options, long insertNumber, long packetSize) {
+    public Inserter(GeneratorOptions options, long insertNumber, long packetSize)
+            throws PropertyVetoException {
         this.connector = new MySqlConnector(options.getDbLogin(), options.getDbPassword(),
                 options.getDbServer(), options.getDbPort(), options.getDbName(), packetSize);
         this.insertNumber = insertNumber;
@@ -28,7 +30,7 @@ public class Inserter {
             ChunkKeeper chunkKeeper = new ChunkKeeper(entities.size(), insertNumber);
             String sql = entities.iterator().next().getPreparedSql();
             NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
-                    connector.getDataSource());
+                    connector.getCpds());
 
             while (chunkKeeper.hasNext()) {
                 List chunk = chunkKeeper.getChunkFromList(entities);
@@ -37,5 +39,9 @@ public class Inserter {
                 template.batchUpdate(sql, batch);
             }
         }
+    }
+
+    public void closePool() {
+        connector.closePool();
     }
 }

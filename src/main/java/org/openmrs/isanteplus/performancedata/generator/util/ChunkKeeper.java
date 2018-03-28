@@ -11,6 +11,7 @@ public class ChunkKeeper {
 
     private long chunkSize;
 
+    @Getter
     private long current;
 
     @Getter
