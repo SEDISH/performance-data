@@ -1,10 +1,9 @@
 package org.openmrs.isanteplus.performancedata.model.connection;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.Getter;
-import org.apache.commons.dbcp.BasicDataSource;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.beans.PropertyVetoException;
 
 public class MySqlConnector {
 
@@ -18,40 +17,56 @@ public class MySqlConnector {
 
     private String dbName;
 
-    @Getter
-    private BasicDataSource dataSource;
+    private long packetSize;
 
-    private Connection connection;
+    @Getter
+    private ComboPooledDataSource cpds;
 
     public MySqlConnector(String login, String password, String server, String port,
-                          String dbName) {
+                          String dbName, long packetSize) throws PropertyVetoException {
         this.login = login;
         this.password = password;
         this.server = server;
         this.port = port;
         this.dbName = dbName;
-        this.dataSource = setDataSource();
+        this.packetSize = packetSize;
+        this.cpds = setComboPooledDataSource();
     }
 
-    public void connect() throws SQLException {
-        connection = dataSource.getConnection();
+    public void closePool() {
+        cpds.close();
     }
 
-    public void disconnect() throws SQLException {
-        connection.close();
-        connection = null;
-    }
+    private ComboPooledDataSource setComboPooledDataSource() throws PropertyVetoException {
+        cpds = new ComboPooledDataSource();
+        cpds.setDriverClass("com.mysql.jdbc.Driver");
+        cpds.setUser(login);
+        cpds.setPassword(password);
 
-    private BasicDataSource setDataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://" + server + ":" + port + "/" + dbName);
-        dataSource.setUsername(login);
-        dataSource.setPassword(password);
-        dataSource.addConnectionProperty("useSSL", "false");
-        dataSource.addConnectionProperty("useServerPrepStmts", "false");
-        dataSource.addConnectionProperty("rewriteBatchedStatements", "true");
+        cpds.setMinPoolSize(2);
+        cpds.setAcquireIncrement(2);
+        cpds.setMaxPoolSize(6);
+        cpds.setMaxStatementsPerConnection(10000);
+        cpds.setMaxStatements(100000);
+        cpds.setStatementCacheNumDeferredCloseThreads(1);
 
-        return dataSource;
+        StringBuilder url = new StringBuilder("jdbc:mysql://" + server + ":" + port + "/" + dbName)
+                .append("?")
+                .append("useSSL=false")
+                .append("&")
+                .append("useServerPrepStmts=true")
+                .append("&")
+                .append("rewriteBatchedStatements=true")
+                .append("&")
+                .append("dontCheckOnDuplicateKeyUpdateInSQL=true")
+                .append("&")
+                .append("useFastDateParsing=true")
+                .append("&")
+                .append("maxAllowedPacket=")
+                .append(Long.toString(packetSize));
+
+        cpds.setJdbcUrl(url.toString());
+
+        return cpds;
     }
 }

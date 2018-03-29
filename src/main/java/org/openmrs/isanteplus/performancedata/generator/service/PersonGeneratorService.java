@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class PersonGeneratorService {
 
-    public Set<Person> generateEntities(long amount, LocalDateTime startDate) {
-        Set<Person> people = new HashSet<>();
+    public List<Person> generateEntities(long amount, LocalDateTime startDate) {
+        List<Person> people = new ArrayList<>();
 
         for (long i = 0; i < amount; i++) {
             people.add(generatePerson(IdUtil.getPersonId(), ConceptEnum.GUARDING.getId(),

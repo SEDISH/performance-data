@@ -14,14 +14,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.sql.SQLException;
-import java.util.Set;
+import java.beans.PropertyVetoException;
+import java.util.List;
 
 @Service
 public class GeneratorService {
 
-    @Value("${generator.chunks.patient.size}")
-    private long patientChunkSize;
+    @Value("${generator.chunks.patient.number}")
+    private long patientChunkNumber;
+
+    @Value("${generator.packet.size}")
+    private long packetSize;
+
+    @Value("${generator.inserts.number}")
+    private long insertsNumber;
 
     @Inject
     private PersonGeneratorService personGeneratorService;
@@ -38,27 +44,26 @@ public class GeneratorService {
     @Inject
     private ObsGenerationService obsGenerationService;
 
-    public void generateDatabase(GeneratorOptions options) throws SQLException {
-        Inserter ins = new Inserter(options);
+    public void generateDatabase(GeneratorOptions options) throws PropertyVetoException {
+        Inserter ins = new Inserter(options, insertsNumber, packetSize);
         ProgressBar progressBar = new ProgressBar("Generation...",
                 options.getClinicNumber() * options.getPatientNumber());
 
         try {
-            ins.connect();
             progressBar.start();
 
             for (long i = 0; i < options.getClinicNumber(); i++) {
                 generateClinicData(options, ins, progressBar);
             }
         } finally {
+            ins.closePool();
             progressBar.stop();
-            ins.disconnect();
         }
     }
 
     private void generateClinicData(GeneratorOptions options, Inserter ins,
                                     ProgressBar progressBar) {
-        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatientNumber(), patientChunkSize);
+        ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatientNumber(), patientChunkNumber);
 
         while (chunkKeeper.hasNext()) {
             ClinicDataChunk dataChunk = new ClinicDataChunk();
@@ -72,23 +77,23 @@ public class GeneratorService {
             addObsDataToChunk(options, dataChunk);
 
             dataChunk.insertAll(ins);
-            progressBar.stepBy(patientChunkSize);
+            progressBar.stepBy(chunkKeeper.getLastChunkSize());
         }
     }
 
     private void addPatientsDataToChunk(long amount, GeneratorOptions options,
                                         ClinicDataChunk dataChunk) {
-        Set<Person> people = personGeneratorService.generateEntities(amount,
+        List<Person> people = personGeneratorService.generateEntities(amount,
                 options.getStartDate());
         dataChunk.addAllPeople(people);
 
-        Set<Patient> patients = patientGeneratorService.generateEntities(people);
+        List<Patient> patients = patientGeneratorService.generateEntities(people);
         dataChunk.addAllPatients(patients);
     }
 
     private void addVisitationDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Patient patient : dataChunk.getPatients()) {
-            Set<Visit> visits = visitGeneratorService.generateEntities(
+            List<Visit> visits = visitGeneratorService.generateEntities(
                     patient, options.getVisitNumber(), patient.getDateChanged());
 
             dataChunk.addAllVisits(visits);
@@ -97,7 +102,7 @@ public class GeneratorService {
 
     private void addEncounterDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Visit visit : dataChunk.getVisits()) {
-            Set<Encounter> encounters = encounterGeneratorService.generateEntities(
+            List<Encounter> encounters = encounterGeneratorService.generateEntities(
                     visit, options.getEncounterNumber(), visit.getDateChanged());
 
             dataChunk.addAllEncounters(encounters);
@@ -106,7 +111,7 @@ public class GeneratorService {
 
     private void addObsDataToChunk(GeneratorOptions options, ClinicDataChunk dataChunk) {
         for (Encounter encounter : dataChunk.getEncounters()) {
-            Set<Obs> observations = obsGenerationService.generateEntities(
+            List<Obs> observations = obsGenerationService.generateEntities(
                     encounter, options.getObsNumber(), encounter.getDateChanged());
 
             dataChunk.addAllObses(observations);

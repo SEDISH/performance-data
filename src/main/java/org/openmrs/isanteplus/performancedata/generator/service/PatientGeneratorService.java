@@ -8,16 +8,16 @@ import org.openmrs.isanteplus.performancedata.model.Person;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class PatientGeneratorService {
 
-    public Set<Patient> generateEntities(Set<Person> people) {
+    public List<Patient> generateEntities(List<Person> people) {
 
-        Set<Patient> patients = new HashSet<>();
+        List<Patient> patients = new ArrayList<>();
 
         for (Person person : people) {
             patients.add(generatePatient(person.getId(), person.getDateChanged()));
