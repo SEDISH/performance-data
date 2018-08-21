@@ -2,15 +2,19 @@ package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class Obs extends AbstractEntity {
+@NoArgsConstructor
+public class Obs extends Entity {
 
-    private static final String PREPARED_SQL = "insert into obs" +
+    protected final String TABLE_NAME = "obs";
+    protected final String ID_COLUMN = "obs_id";
+    protected final String PREPARED_SQL = "insert into " + TABLE_NAME +
             " (obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, " +
             "location_id, obs_group_id, accession_number, value_group_id, value_coded," +
             "value_coded_name_id, value_drug, value_datetime, value_numeric," +
@@ -77,11 +81,6 @@ public class Obs extends AbstractEntity {
     private Long previousVersion;
 
     private String formNamespaceAndPath;
-
-    @Override
-    public String getPreparedSql() {
-        return PREPARED_SQL;
-    }
 
     @Builder
     public Obs(long id, long personId, long conceptId, long encounterId, Long orderId,

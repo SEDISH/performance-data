@@ -1,7 +1,7 @@
 package org.openmrs.isanteplus.performancedata.generator.util;
 
 import lombok.Getter;
-import org.openmrs.isanteplus.performancedata.model.AbstractEntity;
+import org.openmrs.isanteplus.performancedata.model.Entity;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class ChunkKeeper {
         return lastChunkSize;
     }
 
-    public List<AbstractEntity> getChunkFromList(List<AbstractEntity> entities) {
+    public List<Entity> getChunkFromList(List<Entity> entities) {
         int start = (int)(current);
         getChunk();
         int end = (int)(current);

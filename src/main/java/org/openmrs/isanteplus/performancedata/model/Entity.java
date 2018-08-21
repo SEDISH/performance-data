@@ -2,6 +2,7 @@ package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,11 +10,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Getter
 @Setter
 @AllArgsConstructor
-public abstract class AbstractEntity {
+@NoArgsConstructor
+public class Entity {
 
-    private long id;
+    protected long id;
 
-    public abstract String getPreparedSql();
+    protected final String TABLE_NAME = "entity";
+    protected final String ID_COLUMN = "id";
+    protected final String PREPARED_SQL = "insert into " + TABLE_NAME
+            + " (id)"
+            + " values (:id,)";
 
     @Override
     public boolean equals(Object o) {

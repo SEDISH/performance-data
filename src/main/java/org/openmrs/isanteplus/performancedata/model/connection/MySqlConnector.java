@@ -4,6 +4,8 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.Getter;
 
 import java.beans.PropertyVetoException;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MySqlConnector {
 
@@ -35,6 +37,10 @@ public class MySqlConnector {
 
     public void closePool() {
         cpds.close();
+    }
+
+    public Statement createStatement() throws SQLException {
+        return cpds.getConnection().createStatement();
     }
 
     private ComboPooledDataSource setComboPooledDataSource() throws PropertyVetoException {

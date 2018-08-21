@@ -2,15 +2,19 @@ package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class Patient extends AbstractEntity {
+@NoArgsConstructor
+public class Patient extends Entity {
 
-    private static final String PREPARED_SQL = "insert into patient"
+    protected final String ID_COLUMN = "patient_id";
+    protected final String TABLE_NAME = "patient";
+    protected final String PREPARED_SQL = "insert into " + TABLE_NAME
             + " (patient_id, creator, date_created, changed_by, date_changed, voided," +
             " voided_by, date_voided, void_reason, allergy_status)"
             + " values (:id, :creator, :dateCreated, :changedBy, :dateChanged, " +
@@ -33,11 +37,6 @@ public class Patient extends AbstractEntity {
     private String voidReason;
 
     private String allergyStatus;
-
-    @Override
-    public String getPreparedSql() {
-        return PREPARED_SQL;
-    }
 
     @Builder
     public Patient(long id, long creator, LocalDateTime dateCreated, long changedBy,

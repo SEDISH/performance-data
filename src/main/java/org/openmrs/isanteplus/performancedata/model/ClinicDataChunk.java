@@ -1,7 +1,7 @@
 package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.Getter;
-import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
+import org.openmrs.isanteplus.performancedata.model.connection.DataManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +68,7 @@ public class ClinicDataChunk {
         this.observations.addAll(observations);
     }
 
-    public void insertAll(Inserter ins) {
+    public void insertAll(DataManager ins) {
         ins.insertEntities(new ArrayList<>(people));
         ins.insertEntities(new ArrayList<>(patients));
         ins.insertEntities(new ArrayList<>(visits));
