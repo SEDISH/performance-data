@@ -42,7 +42,6 @@ public class PatientGeneratorService {
                 .voidedBy(voidInfo.getParamBy())
                 .dateVoided(voidInfo.getDateParam())
                 .voidReason(voidInfo.getParamReason())
-                .allergyStatus(RandUtil.getString())
                 .build();
     }
 }
