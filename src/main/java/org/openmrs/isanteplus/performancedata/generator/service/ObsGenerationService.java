@@ -42,6 +42,7 @@ public class ObsGenerationService {
                 .obsGroupId(null)
                 .accessionNumber(UUID.randomUUID().toString())
                 .valueGroupId(null)
+                .valueBoolean(null)
                 .valueCoded(null)
                 .valueCodedNameId(null)
                 .valueDrug(null)

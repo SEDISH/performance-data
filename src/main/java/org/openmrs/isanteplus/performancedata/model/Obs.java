@@ -16,13 +16,13 @@ public class Obs extends Entity {
     protected final String ID_COLUMN = "obs_id";
     protected final String PREPARED_SQL = "insert into " + TABLE_NAME +
             " (obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, " +
-            "location_id, obs_group_id, accession_number, value_group_id, value_coded," +
+            "location_id, obs_group_id, accession_number, value_group_id, value_boolean, value_coded," +
             "value_coded_name_id, value_drug, value_datetime, value_numeric," +
             "value_modifier, value_text, value_complex, comments, creator, date_created, " +
             "voided, voided_by, date_voided, void_reason, uuid, previous_version, " +
             "form_namespace_and_path)" +
             " values (:id, :personId, :conceptId, :encounterId, :orderId, :obsDatetime," +
-            " :locationId, :obsGroupId, :accessionNumber, :valueGroupId, :valueCoded," +
+            " :locationId, :obsGroupId, :accessionNumber, :valueGroupId, :valueBoolean, :valueCoded," +
             " :valueCodedNameId, :valueDrug, :valueDatetime, :valueNumeric, :valueModifier," +
             " :valueText, :valueComplex, :comments, :creator, :dateCreated, :voided," +
             " :voidedBy, :dateVoided, :voidReason, :uuid, :previousVersion," +
@@ -45,6 +45,8 @@ public class Obs extends Entity {
     private String accessionNumber;
 
     private Long valueGroupId;
+
+    private Long valueBoolean;
 
     private Long valueCoded;
 
@@ -85,7 +87,7 @@ public class Obs extends Entity {
     @Builder
     public Obs(long id, long personId, long conceptId, long encounterId, Long orderId,
                LocalDateTime obsDatetime, long locationId, Long obsGroupId,
-               String accessionNumber, Long valueGroupId, Long valueCoded,
+               String accessionNumber, Long valueGroupId, Long valueBoolean, Long valueCoded,
                Long valueCodedNameId, Long valueDrug, LocalDateTime valueDatetime,
                Double valueNumeric, String valueModifier, String valueText, String valueComplex,
                String comments, long creator, LocalDateTime dateCreated, long voided,
@@ -101,6 +103,7 @@ public class Obs extends Entity {
         this.obsGroupId = obsGroupId;
         this.accessionNumber = accessionNumber;
         this.valueGroupId = valueGroupId;
+        this.valueBoolean = valueBoolean;
         this.valueCoded = valueCoded;
         this.valueCodedNameId = valueCodedNameId;
         this.valueDrug = valueDrug;
