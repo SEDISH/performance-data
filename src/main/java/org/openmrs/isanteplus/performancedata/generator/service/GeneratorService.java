@@ -1,13 +1,14 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
 import me.tongfei.progressbar.ProgressBar;
+import org.openmrs.isanteplus.performancedata.generator.predefined.PatientIdEnum;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Entity;
 import org.openmrs.isanteplus.performancedata.model.Obs;
 import org.openmrs.isanteplus.performancedata.model.Patient;
+import org.openmrs.isanteplus.performancedata.model.PatientIdentifier;
 import org.openmrs.isanteplus.performancedata.model.Person;
-import org.openmrs.isanteplus.performancedata.model.PersonAddress;
 import org.openmrs.isanteplus.performancedata.model.Visit;
 import org.openmrs.isanteplus.performancedata.model.ClinicDataChunk;
 import org.openmrs.isanteplus.performancedata.model.connection.DataManager;
@@ -54,6 +55,9 @@ public class GeneratorService {
     @Inject
     private PersonNameGeneratorService personNameGeneratorService;
 
+    @Inject
+    private PatientIdGeneratorService patientIdGeneratorService;
+
     public void generateDatabase(GeneratorOptions options) throws PropertyVetoException, SQLException  {
         DataManager ins = new DataManager(options, insertsNumber, packetSize);
 
@@ -81,10 +85,16 @@ public class GeneratorService {
         ChunkKeeper chunkKeeper = new ChunkKeeper(entities.size(), patientChunkNumber);
 
         while (chunkKeeper.hasNext()) {
-            List<PersonAddress> addresses = personAddressGeneratorService.generateEntities(entities,
-                    options.getStartDate());
+            List<PatientIdentifier> identifiers = patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.ECID);
+            identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.ISANTE_ID));
+            identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.ISANTE_PLUS_ID));
+            identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.CODE_NATIONAL));
 
-            ins.insertEntities(new ArrayList<>(addresses));
+            ins.insertEntities(new ArrayList<>(identifiers));
             chunkKeeper.getChunk();
             progressBar.stepBy(chunkKeeper.getLastChunkSize());
         }

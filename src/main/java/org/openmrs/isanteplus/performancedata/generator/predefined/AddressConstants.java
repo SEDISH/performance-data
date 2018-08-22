@@ -1,4 +1,4 @@
-package org.openmrs.isanteplus.performancedata.generator.util;
+package org.openmrs.isanteplus.performancedata.generator.predefined;
 
 public class AddressConstants {
 
