@@ -2,7 +2,6 @@ package org.openmrs.isanteplus.performancedata.model.connection;
 
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.Entity;
-import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.mapper.EntityMapper;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 
@@ -15,7 +14,6 @@ import java.beans.PropertyVetoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
@@ -51,27 +49,19 @@ public class DataManager {
         }
     }
 
-    public  List<Entity> fetchEntities(String tableName, String entityIdName) throws SQLException {
-        List<Entity> entities = new ArrayList<>();
-
-        long size = getCount(tableName);
-        ChunkKeeper chunkKeeper = new ChunkKeeper(size, batchNumber);
+    public  List<Entity> fetchEntities(String tableName, String entityIdName, long limit, long offset) {
         NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
                 connector.getCpds());
-
-        while (chunkKeeper.hasNext()) {
-            chunkKeeper.getChunk();
-            entities.addAll(template.query("SELECT "+ entityIdName + " as " + ID_COLUMN + " FROM " + tableName,
-                    new EntityMapper()));
-        }
-        return entities;
+        return template.query("SELECT "+ entityIdName + " as " + ID_COLUMN + " FROM " + tableName + " LIMIT "
+                + limit + " OFFSET " + offset,
+                new EntityMapper());
     }
 
     public void closePool() {
         connector.closePool();
     }
 
-    private long getCount(String tableName) throws SQLException {
+    public long getCount(String tableName) throws SQLException {
         Statement st = connector.createStatement();
         ResultSet rs = st.executeQuery(SELECT_COUNT + tableName);
         if (rs.next()) {

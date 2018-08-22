@@ -9,6 +9,7 @@ public class ChunkKeeper {
 
     private long amount;
 
+    @Getter
     private long chunkSize;
 
     @Getter

@@ -9,6 +9,8 @@ import org.openmrs.isanteplus.performancedata.model.Obs;
 import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.PatientIdentifier;
 import org.openmrs.isanteplus.performancedata.model.Person;
+import org.openmrs.isanteplus.performancedata.model.PersonAddress;
+import org.openmrs.isanteplus.performancedata.model.PersonName;
 import org.openmrs.isanteplus.performancedata.model.Visit;
 import org.openmrs.isanteplus.performancedata.model.ClinicDataChunk;
 import org.openmrs.isanteplus.performancedata.model.connection.DataManager;
@@ -65,26 +67,27 @@ public class GeneratorService {
                 options.getClinicNumber() * options.getPatientNumber());
 
         try {
-
             progressBar.start();
-            addPersonalData(options, ins, progressBar);
-//            for (long i = 0; i < options.getClinicNumber(); i++) {
-//                generateClinicData(options, ins, progressBar);
-//            }
+            for (long i = 0; i < options.getClinicNumber(); i++) {
+                generateClinicData(options, ins, progressBar);
+            }
+            addPersonalData(options, ins);
         } finally {
             ins.closePool();
             progressBar.stop();
         }
     }
 
-    private void addPersonalData(GeneratorOptions options, DataManager ins,
-                                    ProgressBar progressBar) throws SQLException {
+    private void addPersonalData(GeneratorOptions options, DataManager ins) throws SQLException {
         Patient pat = new Patient();
-        List<Entity> entities = ins.fetchEntities(pat.getTABLE_NAME(), pat.getID_COLUMN());
 
-        ChunkKeeper chunkKeeper = new ChunkKeeper(entities.size(), patientChunkNumber);
+        long size = ins.getCount(pat.getTABLE_NAME());
+        ChunkKeeper chunkKeeper = new ChunkKeeper(size, insertsNumber);
 
         while (chunkKeeper.hasNext()) {
+            List<Entity> entities = ins.fetchEntities(pat.getTABLE_NAME(), pat.getID_COLUMN(),
+                    chunkKeeper.getChunkSize(), chunkKeeper.getCurrent());
+
             List<PatientIdentifier> identifiers = patientIdGeneratorService.generateEntities(entities,
                     options.getStartDate(), PatientIdEnum.ECID);
             identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
@@ -93,10 +96,16 @@ public class GeneratorService {
                     options.getStartDate(), PatientIdEnum.ISANTE_PLUS_ID));
             identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
                     options.getStartDate(), PatientIdEnum.CODE_NATIONAL));
-
             ins.insertEntities(new ArrayList<>(identifiers));
+
+            List<PersonName> names = personNameGeneratorService.generateEntities(entities, options.getStartDate());
+            ins.insertEntities(new ArrayList<>(names));
+
+
+            List<PersonAddress> addresses = personAddressGeneratorService.generateEntities(entities, options.getStartDate());
+            ins.insertEntities(new ArrayList<>(addresses));
+
             chunkKeeper.getChunk();
-            progressBar.stepBy(chunkKeeper.getLastChunkSize());
         }
     }
 
