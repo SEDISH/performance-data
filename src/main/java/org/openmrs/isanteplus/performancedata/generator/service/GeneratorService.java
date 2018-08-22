@@ -51,6 +51,9 @@ public class GeneratorService {
     @Inject
     private PersonAddressGeneratorService personAddressGeneratorService;
 
+    @Inject
+    private PersonNameGeneratorService personNameGeneratorService;
+
     public void generateDatabase(GeneratorOptions options) throws PropertyVetoException, SQLException  {
         DataManager ins = new DataManager(options, insertsNumber, packetSize);
 

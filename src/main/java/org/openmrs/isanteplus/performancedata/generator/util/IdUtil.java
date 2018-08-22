@@ -14,6 +14,8 @@ public final class IdUtil {
 
     private static long personAddressId = INITIAL_ID;
 
+    private static long personNameId = INITIAL_ID;
+
     public static long getPersonId() {
         return personId++;
     }
@@ -32,6 +34,10 @@ public final class IdUtil {
 
     public static long getPersonAddressId() {
         return personAddressId++;
+    }
+
+    public static long getPersonNameId() {
+        return personNameId++;
     }
 
     private IdUtil() {}
