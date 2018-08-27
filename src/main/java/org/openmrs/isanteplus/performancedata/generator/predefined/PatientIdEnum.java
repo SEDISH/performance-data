@@ -31,4 +31,13 @@ public enum PatientIdEnum {
                 return null;
         }
     }
+
+    public long getPreferred() {
+        switch(this) {
+            case ECID:
+                return 1L;
+            default:
+                return 0L;
+        }
+    }
 }

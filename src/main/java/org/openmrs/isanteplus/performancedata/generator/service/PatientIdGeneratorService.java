@@ -40,7 +40,7 @@ public class PatientIdGeneratorService {
                 .patientId(patientId)
                 .identifier(idType.generateIdentifier())
                 .identifierType(idType.getId())
-                .preferred(1L)
+                .preferred(idType.getPreferred())
                 .locationId(LocationEnum.OUTPATIENT_CLINIC.getId())
                 .creator(UserEnum.ADMIN.getId())
                 .dateCreated(startDate)
