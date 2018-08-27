@@ -36,7 +36,7 @@ public class EncounterGeneratorService {
                 .id(IdUtil.getEncounterId())
                 .encounterType(EncounterTypeEnum.VISIT_NOTE.getId())
                 .patientId(parent.getPatientId())
-                .locationId(LocationEnum.OUTPATIENT_CLINIC.getId())
+                .locationId(LocationEnum.CSL_DE_CABARET.getId())
                 .formId(FormEnum.VISIT_NOTE.getId())
                 .encounterDatetime(RandUtil.getDateFromStartToNextDay(startDate))
                 .creator(UserEnum.ADMIN.getId())

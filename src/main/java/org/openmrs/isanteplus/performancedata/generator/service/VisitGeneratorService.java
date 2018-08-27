@@ -41,7 +41,7 @@ public class VisitGeneratorService {
                 .dateStarted(startDate)
                 .dateStopped(RandUtil.getDateFromStartToNextDay(startDate))
                 .indicationConceptId(ConceptEnum.REBOUND.getId())
-                .locationId(LocationEnum.OUTPATIENT_CLINIC.getId())
+                .locationId(LocationEnum.CSL_DE_CABARET.getId())
                 .creator(UserEnum.ADMIN.getId())
                 .dateCreated(startDate)
                 .changedBy(changeInfo.getParamBy())

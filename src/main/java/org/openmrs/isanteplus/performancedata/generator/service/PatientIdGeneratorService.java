@@ -41,7 +41,7 @@ public class PatientIdGeneratorService {
                 .identifier(idType.generateIdentifier())
                 .identifierType(idType.getId())
                 .preferred(idType.getPreferred())
-                .locationId(LocationEnum.OUTPATIENT_CLINIC.getId())
+                .locationId(LocationEnum.CSL_DE_CABARET.getId())
                 .creator(UserEnum.ADMIN.getId())
                 .dateCreated(startDate)
                 .dateChanged(changeInfo.getDateParam())
