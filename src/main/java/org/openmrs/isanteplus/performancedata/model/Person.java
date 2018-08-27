@@ -2,6 +2,7 @@ package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -10,9 +11,12 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class Person extends AbstractEntity {
+@NoArgsConstructor
+public class Person extends Entity {
 
-    private static final String PREPARED_SQL = "insert into person"
+    protected final String TABLE_NAME = "person";
+    protected final String ID_COLUMN = "person_id";
+    protected final String PREPARED_SQL = "insert into " + TABLE_NAME
             + " (person_id, gender, birthdate, birthdate_estimated, dead, death_date, " +
             "cause_of_death, creator, date_created, changed_by, date_changed, voided, voided_by, " +
             "date_voided, void_reason, uuid, deathdate_estimated, birthtime)"
@@ -36,13 +40,13 @@ public class Person extends AbstractEntity {
 
     private LocalDateTime dateCreated;
 
-    private long changedBy;
+    private Long changedBy;
 
     private LocalDateTime dateChanged;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 
@@ -53,11 +57,6 @@ public class Person extends AbstractEntity {
     private long deathdateEstimated;
 
     private LocalTime birthtime;
-
-    @Override
-    public String getPreparedSql() {
-        return PREPARED_SQL;
-    }
 
     @Builder
     public Person(long id, String gender, LocalDate birthdate, long birthdateEstimated, long dead,

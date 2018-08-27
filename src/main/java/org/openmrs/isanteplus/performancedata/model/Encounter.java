@@ -2,15 +2,19 @@ package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class Encounter extends AbstractEntity {
+@NoArgsConstructor
+public class Encounter extends Entity {
 
-    private static final String PREPARED_SQL = "insert into encounter"
+    protected final String TABLE_NAME = "encounter";
+    protected final String ID_COLUMN = "encounter_id";
+    protected final String PREPARED_SQL = "insert into " + TABLE_NAME
             + " (encounter_id, encounter_type, patient_id, location_id, form_id, " +
             "encounter_datetime, creator, date_created, voided, voided_by, date_voided, " +
             "void_reason, changed_by, date_changed, visit_id, uuid)"
@@ -32,26 +36,21 @@ public class Encounter extends AbstractEntity {
 
     private LocalDateTime dateCreated;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 
     private String voidReason;
 
-    private long changedBy;
+    private Long changedBy;
 
     private LocalDateTime dateChanged;
 
     private long visitId;
     
     private String uuid;
-
-    @Override
-    public String getPreparedSql() {
-        return PREPARED_SQL;
-    }
 
     @Builder
     public Encounter(long id, long encounterType, long patientId,

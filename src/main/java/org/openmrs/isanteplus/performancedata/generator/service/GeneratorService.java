@@ -1,20 +1,27 @@
 package org.openmrs.isanteplus.performancedata.generator.service;
 
 import me.tongfei.progressbar.ProgressBar;
+import org.openmrs.isanteplus.performancedata.generator.predefined.PatientIdEnum;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
+import org.openmrs.isanteplus.performancedata.model.Entity;
 import org.openmrs.isanteplus.performancedata.model.Obs;
 import org.openmrs.isanteplus.performancedata.model.Patient;
+import org.openmrs.isanteplus.performancedata.model.PatientIdentifier;
 import org.openmrs.isanteplus.performancedata.model.Person;
+import org.openmrs.isanteplus.performancedata.model.PersonAddress;
+import org.openmrs.isanteplus.performancedata.model.PersonName;
 import org.openmrs.isanteplus.performancedata.model.Visit;
 import org.openmrs.isanteplus.performancedata.model.ClinicDataChunk;
-import org.openmrs.isanteplus.performancedata.model.connection.Inserter;
+import org.openmrs.isanteplus.performancedata.model.connection.DataManager;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,24 +51,65 @@ public class GeneratorService {
     @Inject
     private ObsGenerationService obsGenerationService;
 
-    public void generateDatabase(GeneratorOptions options) throws PropertyVetoException {
-        Inserter ins = new Inserter(options, insertsNumber, packetSize);
+    @Inject
+    private PersonAddressGeneratorService personAddressGeneratorService;
+
+    @Inject
+    private PersonNameGeneratorService personNameGeneratorService;
+
+    @Inject
+    private PatientIdGeneratorService patientIdGeneratorService;
+
+    public void generateDatabase(GeneratorOptions options) throws PropertyVetoException, SQLException  {
+        DataManager ins = new DataManager(options, insertsNumber, packetSize);
+
         ProgressBar progressBar = new ProgressBar("Generation...",
                 options.getClinicNumber() * options.getPatientNumber());
 
         try {
             progressBar.start();
-
             for (long i = 0; i < options.getClinicNumber(); i++) {
                 generateClinicData(options, ins, progressBar);
             }
+            addPersonalData(options, ins);
         } finally {
             ins.closePool();
             progressBar.stop();
         }
     }
 
-    private void generateClinicData(GeneratorOptions options, Inserter ins,
+    private void addPersonalData(GeneratorOptions options, DataManager ins) throws SQLException {
+        Patient pat = new Patient();
+
+        long size = ins.getCount(pat.getTABLE_NAME());
+        ChunkKeeper chunkKeeper = new ChunkKeeper(size, insertsNumber);
+
+        while (chunkKeeper.hasNext()) {
+            List<Entity> entities = ins.fetchEntities(pat.getTABLE_NAME(), pat.getID_COLUMN(),
+                    chunkKeeper.getChunkSize(), chunkKeeper.getCurrent());
+
+            List<PatientIdentifier> identifiers = patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.ECID);
+            identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.ISANTE_ID));
+            identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.ISANTE_PLUS_ID));
+            identifiers.addAll(patientIdGeneratorService.generateEntities(entities,
+                    options.getStartDate(), PatientIdEnum.CODE_NATIONAL));
+            ins.insertEntities(new ArrayList<>(identifiers));
+
+            List<PersonName> names = personNameGeneratorService.generateEntities(entities, options.getStartDate());
+            ins.insertEntities(new ArrayList<>(names));
+
+
+            List<PersonAddress> addresses = personAddressGeneratorService.generateEntities(entities, options.getStartDate());
+            ins.insertEntities(new ArrayList<>(addresses));
+
+            chunkKeeper.getChunk();
+        }
+    }
+
+    private void generateClinicData(GeneratorOptions options, DataManager ins,
                                     ProgressBar progressBar) {
         ChunkKeeper chunkKeeper = new ChunkKeeper(options.getPatientNumber(), patientChunkNumber);
 

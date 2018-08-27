@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,10 +30,7 @@ public class PersonGeneratorService {
 
     private Person generatePerson(long id, long conceptId, LocalDateTime startDate) {
         ParamData changeInfo = new ParamData(startDate);
-        LocalDateTime lastEventDate = Optional.ofNullable(changeInfo.getDateParam())
-                .orElse(startDate);
-
-        ParamData voidInfo = new ParamData(lastEventDate);
+        ParamData voidInfo = new ParamData();
 
         return Person.builder()
                 .id(id)

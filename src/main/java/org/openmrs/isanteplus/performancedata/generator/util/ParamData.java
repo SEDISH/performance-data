@@ -10,7 +10,7 @@ public class ParamData {
     private boolean param;
 
     @Getter
-    private long paramBy;
+    private Long paramBy;
 
     @Getter
     private LocalDateTime dateParam;
@@ -18,9 +18,16 @@ public class ParamData {
     @Getter
     private String paramReason;
 
+    public ParamData() {
+        param = false;
+        paramBy = null;
+        dateParam = null;
+        paramReason = null;
+    }
+
     public ParamData(LocalDateTime start) {
         param = true;
-        paramBy = UserEnum.SYS_ADMIN.getId();
+        paramBy = UserEnum.ADMIN.getId();
         dateParam = RandUtil.getDateFromStartToNow(start);
         paramReason = RandUtil.getString();
     }

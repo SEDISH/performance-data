@@ -2,47 +2,44 @@ package org.openmrs.isanteplus.performancedata.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class Patient extends AbstractEntity {
+@NoArgsConstructor
+public class Patient extends Entity {
 
-    private static final String PREPARED_SQL = "insert into patient"
+    protected final String ID_COLUMN = "patient_id";
+    protected final String TABLE_NAME = "patient";
+    protected final String PREPARED_SQL = "insert into " + TABLE_NAME
             + " (patient_id, creator, date_created, changed_by, date_changed, voided," +
-            " voided_by, date_voided, void_reason, allergy_status)"
+            " voided_by, date_voided, void_reason)"
             + " values (:id, :creator, :dateCreated, :changedBy, :dateChanged, " +
-            ":voided, :voidedBy, :dateVoided, :voidReason, :allergyStatus)";
+            ":voided, :voidedBy, :dateVoided, :voidReason)";
 
     private long creator;
 
     private LocalDateTime dateCreated;
 
-    private long changedBy;
+    private Long changedBy;
 
     private LocalDateTime dateChanged;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 
     private String voidReason;
 
-    private String allergyStatus;
-
-    @Override
-    public String getPreparedSql() {
-        return PREPARED_SQL;
-    }
-
     @Builder
     public Patient(long id, long creator, LocalDateTime dateCreated, long changedBy,
                    LocalDateTime dateChanged, long voided, long voidedBy,
-                   LocalDateTime dateVoided, String voidReason, String allergyStatus) {
+                   LocalDateTime dateVoided, String voidReason) {
         super(id);
         this.creator = creator;
         this.dateCreated = dateCreated;
@@ -52,6 +49,5 @@ public class Patient extends AbstractEntity {
         this.voidedBy = voidedBy;
         this.dateVoided = dateVoided;
         this.voidReason = voidReason;
-        this.allergyStatus = allergyStatus;
     }
 }
