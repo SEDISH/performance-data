@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -30,11 +29,9 @@ public class PersonNameGeneratorService {
 
     private PersonName generatePersonName(long id, long personId, LocalDateTime startDate) {
         ParamData changeInfo = new ParamData(startDate);
-        LocalDateTime lastEventDate = Optional.ofNullable(changeInfo.getDateParam())
-                .orElse(startDate);
-
-        ParamData voidInfo = new ParamData(lastEventDate);
+        ParamData voidInfo = new ParamData();
         RandomStringUtils.randomAlphanumeric(60);
+
         return PersonName.builder()
                 .id(id)
                 .preferred(1L)

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,9 +32,7 @@ public class VisitGeneratorService {
 
     private Visit generateVisit(long parentId, LocalDateTime startDate) {
         ParamData changeInfo = new ParamData(startDate);
-        LocalDateTime lastEventDate = Optional.ofNullable(changeInfo.getDateParam())
-                .orElse(startDate);
-        ParamData voidInfo = new ParamData(lastEventDate);
+        ParamData voidInfo = new ParamData();
 
         return Visit.builder()
                 .id(IdUtil.getVisitId())

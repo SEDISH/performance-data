@@ -34,8 +34,8 @@ public class PersonName extends Entity {
     private String degree;
     private long creator;
     private LocalDateTime dateCreated;
-    private long voided;
-    private long voidedBy;
+    private Long voided;
+    private Long voidedBy;
     private LocalDateTime dateVoided;
     private String voidReason;
     private Long changedBy;

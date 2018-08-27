@@ -38,13 +38,13 @@ public class Visit extends Entity {
 
     private LocalDateTime dateCreated;
 
-    private long changedBy;
+    private Long changedBy;
 
     private LocalDateTime dateChanged;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 

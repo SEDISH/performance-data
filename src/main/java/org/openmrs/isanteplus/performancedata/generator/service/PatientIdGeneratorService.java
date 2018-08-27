@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -33,11 +32,9 @@ public class PatientIdGeneratorService {
     private PatientIdentifier generatePatientIdentifier(long id, long patientId, LocalDateTime startDate,
                                                         PatientIdEnum idType) {
         ParamData changeInfo = new ParamData(startDate);
-        LocalDateTime lastEventDate = Optional.ofNullable(changeInfo.getDateParam())
-                .orElse(startDate);
-
-        ParamData voidInfo = new ParamData(lastEventDate);
+        ParamData voidInfo = new ParamData();
         RandomStringUtils.randomAlphanumeric(60);
+
         return PatientIdentifier.builder()
                 .id(id)
                 .patientId(patientId)

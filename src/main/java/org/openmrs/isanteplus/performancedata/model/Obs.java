@@ -70,9 +70,9 @@ public class Obs extends Entity {
 
     private LocalDateTime dateCreated;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 

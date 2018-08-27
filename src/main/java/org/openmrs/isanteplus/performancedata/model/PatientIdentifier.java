@@ -29,8 +29,8 @@ public class PatientIdentifier extends Entity {
     private LocalDateTime dateCreated;
     private LocalDateTime dateChanged;
     private Long changedBy;
-    private long voided;
-    private long voidedBy;
+    private Long voided;
+    private Long voidedBy;
     private LocalDateTime dateVoided;
     private String voidReason;
     private String uuid;

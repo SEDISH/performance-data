@@ -2,7 +2,6 @@ package org.openmrs.isanteplus.performancedata.generator.service;
 
 import org.openmrs.isanteplus.performancedata.generator.predefined.UserEnum;
 import org.openmrs.isanteplus.performancedata.generator.util.ParamData;
-import org.openmrs.isanteplus.performancedata.generator.util.RandUtil;
 import org.openmrs.isanteplus.performancedata.model.Patient;
 import org.openmrs.isanteplus.performancedata.model.Person;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PatientGeneratorService {
@@ -28,9 +26,7 @@ public class PatientGeneratorService {
 
     private Patient generatePatient(long id, LocalDateTime startDate) {
         ParamData changeInfo = new ParamData(startDate);
-        LocalDateTime lastEventDate = Optional.ofNullable(changeInfo.getDateParam())
-                .orElse(startDate);
-        ParamData voidInfo = new ParamData(lastEventDate);
+        ParamData voidInfo = new ParamData();
 
         return Patient.builder()
                 .id(id)

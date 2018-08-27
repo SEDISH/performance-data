@@ -53,9 +53,9 @@ public class PersonAddress extends Entity {
 
     private LocalDateTime dateCreated;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 

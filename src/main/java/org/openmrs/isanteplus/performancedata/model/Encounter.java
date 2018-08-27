@@ -36,15 +36,15 @@ public class Encounter extends Entity {
 
     private LocalDateTime dateCreated;
 
-    private long voided;
+    private Long voided;
 
-    private long voidedBy;
+    private Long voidedBy;
 
     private LocalDateTime dateVoided;
 
     private String voidReason;
 
-    private long changedBy;
+    private Long changedBy;
 
     private LocalDateTime dateChanged;
 

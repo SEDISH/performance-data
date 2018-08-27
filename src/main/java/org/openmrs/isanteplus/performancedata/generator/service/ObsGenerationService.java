@@ -27,8 +27,7 @@ public class ObsGenerationService {
     }
 
     private Obs generateObs(Encounter parent, LocalDateTime date) {
-
-        ParamData voidInfo = new ParamData(date);
+        ParamData voidInfo = new ParamData();
 
         return Obs.builder()
                 .id(IdUtil.getObsId())
