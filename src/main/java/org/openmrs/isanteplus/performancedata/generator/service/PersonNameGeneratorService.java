@@ -18,13 +18,13 @@ import java.util.UUID;
 public class PersonNameGeneratorService {
 
     public List<PersonName> generateEntities(List<Entity> entities, LocalDateTime startDate) {
-        List<PersonName> addresses = new ArrayList<>();
+        List<PersonName> identifiers = new ArrayList<>();
 
         for (Entity entity: entities) {
-            addresses.add(generatePersonName(IdUtil.getPersonNameId(), entity.getId(), startDate));
+            identifiers.add(generatePersonName(IdUtil.getPersonNameId(), entity.getId(), startDate));
         }
 
-        return addresses;
+        return identifiers;
     }
 
     private PersonName generatePersonName(long id, long personId, LocalDateTime startDate) {

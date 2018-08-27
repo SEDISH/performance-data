@@ -20,13 +20,13 @@ import java.util.UUID;
 public class PatientIdGeneratorService {
 
     public List<PatientIdentifier> generateEntities(List<Entity> entities, LocalDateTime startDate, PatientIdEnum idType) {
-        List<PatientIdentifier> addresses = new ArrayList<>();
+        List<PatientIdentifier> identifiers = new ArrayList<>();
 
         for (Entity entity: entities) {
-            addresses.add(generatePatientIdentifier(IdUtil.getpatientIdentifierId(), entity.getId(), startDate, idType));
+            identifiers.add(generatePatientIdentifier(IdUtil.getpatientIdentifierId(), entity.getId(), startDate, idType));
         }
 
-        return addresses;
+        return identifiers;
     }
 
     private PatientIdentifier generatePatientIdentifier(long id, long patientId, LocalDateTime startDate,
