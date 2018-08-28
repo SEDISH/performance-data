@@ -61,6 +61,38 @@ public class Encounter extends Entity {
     }
 
     @Override
+    public String getSelect(long limit, long offset) {
+        return "SELECT "+ ID_COLUMN + ", " +
+                TYPE_COLUMN  + ", " +
+                PATIENT_ID_COLUMN + ", " +
+                LOCATION_COLUMN + ", " +
+                FORM_COLUMN + ", " +
+                DATE_TIME_COLUMN + ", " +
+                CHANGED_BY_COLUMN + ", " +
+                DATE_CHANGED_COLUMN + ", " +
+                VISIT_COLUMN + ", " +
+                UUID_COLUMN + ", " +
+                CREATOR_COLUMN + ", " +
+                DATE_CREATED_COLUMN + ", " +
+                VOIDED_COLUMN + ", " +
+                VOIDED_BY_COLUMN + ", " +
+                DATE_VOIDED_COLUMN + ", " +
+                VOID_REASON_COLUMN +
+                " FROM " + TABLE_NAME + " LIMIT "
+                + limit + " OFFSET " + offset;
+    }
+
+    @Override
+    public String getCount() {
+        return getCount(TABLE_NAME);
+    }
+
+    @Override
+    public String getLastID() {
+        return "SELECT MAX(" + ID_COLUMN + ") as " + COUNT_ALIAS + " FROM " + TABLE_NAME;
+    }
+
+    @Override
     public boolean equals(Object o) {
         return EqualsBuilder.reflectionEquals(this, o);
     }

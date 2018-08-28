@@ -3,6 +3,7 @@ package org.openmrs.isanteplus.performancedata.generator.service;
 import me.tongfei.progressbar.ProgressBar;
 import org.openmrs.isanteplus.performancedata.generator.predefined.PatientIdEnum;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
+import org.openmrs.isanteplus.performancedata.generator.util.IdUtil;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Entity;
 import org.openmrs.isanteplus.performancedata.model.Obs;
@@ -68,13 +69,39 @@ public class GeneratorService {
 
         try {
             progressBar.start();
-            for (long i = 0; i < options.getClinicNumber(); i++) {
-                generateClinicData(options, ins, progressBar);
-            }
-            addPersonalData(options, ins);
+//            for (long i = 0; i < options.getClinicNumber(); i++) {
+//                generateClinicData(options, ins, progressBar);
+//            }
+//            addPersonalData(options, ins);
+            addObsData(ins);
         } finally {
             ins.closePool();
             progressBar.stop();
+        }
+    }
+
+    private void addObsData(DataManager dataManager) throws SQLException {
+        Encounter encounter = new Encounter();
+        IdUtil.initObs(dataManager);
+
+        long size = dataManager.getCount(encounter);
+        ChunkKeeper chunkKeeper = new ChunkKeeper(size, insertsNumber);
+
+        while (chunkKeeper.hasNext()) {
+            List<Encounter> encounters = dataManager.fetchEncounters(encounter.getSelect(
+                    chunkKeeper.getChunkSize(), chunkKeeper.getCurrent()));
+            ClinicDataChunk dataChunk = new ClinicDataChunk();
+
+            for (Encounter enc : encounters) {
+                List<Obs> observations = obsGenerationService.generateLabResults(enc, enc.getDateChanged());
+                dataChunk.addAllObses(observations);
+                if (observations.size() >= chunkKeeper.getChunkSize()) {
+                    dataChunk.insertAndFlush(dataManager);
+                }
+            }
+
+            dataChunk.insertAndFlush(dataManager);
+            chunkKeeper.getChunk();
         }
     }
 

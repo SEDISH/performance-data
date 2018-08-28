@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum.AGE_UNIT;
+import static org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum.AGE_WHEN_TESTED;
+import static org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum.LABORATORY_RESULTS;
+import static org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum.RAPID_TEST_FOR_HIV;
+import static org.openmrs.isanteplus.performancedata.generator.predefined.ConceptEnum.TEST_NAME;
+
 @Service
 public class ObsGenerationService {
 
@@ -20,15 +26,14 @@ public class ObsGenerationService {
                                       LocalDateTime startDate) {
         List<Obs> observations = new ArrayList<>();
         for (long i = 0; i < amount; i++) {
-            observations.add(generateObs(encounter, startDate));
+            observations.add(generateNewObs(encounter, startDate));
         }
 
         return observations;
     }
 
-    private Obs generateObs(Encounter parent, LocalDateTime date) {
+    private Obs generateNewObs(Encounter parent, LocalDateTime date) {
         ParamData voidInfo = new ParamData();
-
         return Obs.builder()
                 .id(IdUtil.getObsId())
                 .personId(parent.getPatientId()) // it is allowed, because patient and person id
@@ -62,4 +67,50 @@ public class ObsGenerationService {
                 .formNamespaceAndPath(UUID.randomUUID().toString())
                 .build();
     }
+    
+    public List<Obs> generateLabResults(Encounter encounter, LocalDateTime startDate) {
+        List<Obs> observations = new ArrayList<>();
+        Obs mainObs = getObs(encounter, startDate, LABORATORY_RESULTS, null);
+        observations.add(mainObs);
+        
+        observations.add(getObs(encounter, startDate, TEST_NAME, mainObs.getId()));
+        observations.add(getObs(encounter, startDate, AGE_WHEN_TESTED, mainObs.getId()));
+        observations.add(getObs(encounter, startDate, AGE_UNIT, mainObs.getId()));
+        observations.add(getObs(encounter, startDate, RAPID_TEST_FOR_HIV, mainObs.getId()));
+        
+
+        return observations;
+    }
+
+    private Obs getObs(Encounter parent, LocalDateTime date, ConceptEnum type, Long obsGroupId) {
+        Obs obs = generateNewObs(parent, date);
+        switch(type) {
+            case LABORATORY_RESULTS:
+                obs.setConceptId(LABORATORY_RESULTS.getId());
+                obs.setObsGroupId(null);
+                return obs;
+            case TEST_NAME:
+                obs.setConceptId(TEST_NAME.getId());
+                obs.setObsGroupId(obsGroupId);
+                obs.setValueCoded(163722L);
+                return obs;
+            case AGE_WHEN_TESTED:
+                obs.setConceptId(AGE_WHEN_TESTED.getId());
+                obs.setObsGroupId(obsGroupId);
+                obs.setValueNumeric(1.0);
+                return obs;
+            case AGE_UNIT:
+                obs.setConceptId(AGE_UNIT.getId());
+                obs.setObsGroupId(obsGroupId);
+                obs.setValueCoded(1072L);
+                return obs;
+            case RAPID_TEST_FOR_HIV:
+                obs.setConceptId(RAPID_TEST_FOR_HIV.getId());
+                obs.setObsGroupId(obsGroupId);
+                return obs;
+            default:
+                return obs;
+        }
+    }
+
 }

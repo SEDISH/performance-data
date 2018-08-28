@@ -21,11 +21,7 @@ public class ClinicDataChunk {
     private List<Obs> observations;
 
     public ClinicDataChunk() {
-        people = new ArrayList<>();
-        patients = new ArrayList<>();
-        visits = new ArrayList<>();
-        encounters = new ArrayList<>();
-        observations = new ArrayList<>();
+        initCollections();
     }
 
     public void addPerson(Person person) {
@@ -68,11 +64,24 @@ public class ClinicDataChunk {
         this.observations.addAll(observations);
     }
 
-    public void insertAll(DataManager ins) {
-        ins.insertEntities(new ArrayList<>(people));
-        ins.insertEntities(new ArrayList<>(patients));
-        ins.insertEntities(new ArrayList<>(visits));
-        ins.insertEntities(new ArrayList<>(encounters));
-        ins.insertEntities(new ArrayList<>(observations));
+    public void insertAndFlush(DataManager dataManager) {
+        insertAll(dataManager);
+        initCollections();
+    }
+
+    public void insertAll(DataManager dataManager) {
+        dataManager.insertEntities(new ArrayList<>(people));
+        dataManager.insertEntities(new ArrayList<>(patients));
+        dataManager.insertEntities(new ArrayList<>(visits));
+        dataManager.insertEntities(new ArrayList<>(encounters));
+        dataManager.insertEntities(new ArrayList<>(observations));
+    }
+
+    private void initCollections() {
+        people = new ArrayList<>();
+        patients = new ArrayList<>();
+        visits = new ArrayList<>();
+        encounters = new ArrayList<>();
+        observations = new ArrayList<>();
     }
 }

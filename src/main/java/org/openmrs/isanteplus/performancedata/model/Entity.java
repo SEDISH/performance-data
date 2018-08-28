@@ -39,7 +39,7 @@ public class Entity {
     public final String COUNT_ALIAS = "size";
 
     private final String SELECT_COUNT = "SELECT COUNT(*) as " + COUNT_ALIAS + " FROM ";
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss[.S]"); //2012-01-12 22:38:19.0
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss[.S]");
 
     public Entity(long id) {
         this.id = id;
@@ -75,6 +75,10 @@ public class Entity {
 
     public String getCount() {
         return getCount(TABLE_NAME);
+    }
+
+    public String getLastID() {
+        return "SELECT MAX(" + ID_COLUMN + ") as " + COUNT_ALIAS + " FROM " + TABLE_NAME;
     }
 
     protected String getCount(String tableName) {

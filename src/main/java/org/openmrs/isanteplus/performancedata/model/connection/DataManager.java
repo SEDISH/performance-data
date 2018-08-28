@@ -1,7 +1,9 @@
 package org.openmrs.isanteplus.performancedata.model.connection;
 
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
+import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Entity;
+import org.openmrs.isanteplus.performancedata.model.mapper.EncounterMapper;
 import org.openmrs.isanteplus.performancedata.model.mapper.EntityMapper;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 
@@ -45,10 +47,16 @@ public class DataManager {
         }
     }
 
-    public  List<Entity> fetchEntities(String query) {
+    public List<Entity> fetchEntities(String query) {
         NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
                 connector.getCpds());
         return template.query(query, new EntityMapper());
+    }
+
+    public List<Encounter> fetchEncounters(String query) {
+        NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
+                connector.getCpds());
+        return template.query(query, new EncounterMapper());
     }
 
     public void closePool() {
@@ -56,11 +64,18 @@ public class DataManager {
     }
 
     public long getCount(Entity entity) throws SQLException {
+        return getLong(entity.getCount(), entity.COUNT_ALIAS);
+    }
+
+    public long getLastID(Entity entity) throws SQLException {
+        return getLong(entity.getLastID(), entity.COUNT_ALIAS);
+    }
+
+    private long getLong(String query, String alias) throws SQLException {
         Statement st = connector.createStatement();
-        String query = entity.getCount();
         ResultSet rs = st.executeQuery(query);
         if (rs.next()) {
-            return rs.getLong(entity.COUNT_ALIAS);
+            return rs.getLong(alias);
         } else {
             throw new SQLException(query+ "; couldn't get any result");
         }
