@@ -42,7 +42,7 @@ public class PersonAddressGeneratorService {
                 .cityVillage(AddressConstants.CITY_VILLAGE)
                 .stateProvince(AddressConstants.STATE_PROVIENCE)
                 .postalCode(null)
-                .cityVillage(AddressConstants.COUNTRY)
+                .country(AddressConstants.COUNTRY)
                 .latitude(null)
                 .longitude(null)
                 .startDate(null)
