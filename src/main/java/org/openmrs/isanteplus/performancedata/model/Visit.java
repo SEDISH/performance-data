@@ -42,7 +42,7 @@ public class Visit extends Entity {
 
     private LocalDateTime dateChanged;
 
-    private Long voided;
+    private long voided;
 
     private Long voidedBy;
 
@@ -53,11 +53,10 @@ public class Visit extends Entity {
     private String uuid;
 
     @Builder
-    public Visit(long id, long patientId, long visitTypeId, LocalDateTime dateStarted,
-                 LocalDateTime dateStopped, long indicationConceptId, long locationId,
-                 long creator, LocalDateTime dateCreated, long changedBy,
-                 LocalDateTime dateChanged, long voided, long voidedBy, LocalDateTime dateVoided,
-                 String voidReason, String uuid) {
+    public Visit(long id, long patientId, long visitTypeId, LocalDateTime dateStarted, LocalDateTime dateStopped,
+                 long indicationConceptId, long locationId, long creator, LocalDateTime dateCreated, Long changedBy,
+                 LocalDateTime dateChanged, long voided, Long voidedBy, LocalDateTime dateVoided, String voidReason,
+                 String uuid) {
         super(id);
         this.patientId = patientId;
         this.visitTypeId = visitTypeId;

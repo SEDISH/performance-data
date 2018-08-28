@@ -22,10 +22,6 @@ public class DataManager {
 
     private final long batchNumber;
 
-    private final String COUNT_COLUMN = "size";
-    private final String SELECT_COUNT = "SELECT COUNT(*) as " + COUNT_COLUMN + " FROM ";
-    private final String ID_COLUMN = "id";
-
     public DataManager(GeneratorOptions options, long batchNumber, long packetSize)
             throws PropertyVetoException {
         this.connector = new MySqlConnector(options.getDbLogin(), options.getDbPassword(),
@@ -49,25 +45,24 @@ public class DataManager {
         }
     }
 
-    public  List<Entity> fetchEntities(String tableName, String entityIdName, long limit, long offset) {
+    public  List<Entity> fetchEntities(String query) {
         NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
                 connector.getCpds());
-        return template.query("SELECT "+ entityIdName + " as " + ID_COLUMN + " FROM " + tableName + " LIMIT "
-                + limit + " OFFSET " + offset,
-                new EntityMapper());
+        return template.query(query, new EntityMapper());
     }
 
     public void closePool() {
         connector.closePool();
     }
 
-    public long getCount(String tableName) throws SQLException {
+    public long getCount(Entity entity) throws SQLException {
         Statement st = connector.createStatement();
-        ResultSet rs = st.executeQuery(SELECT_COUNT + tableName);
+        String query = entity.getCount();
+        ResultSet rs = st.executeQuery(query);
         if (rs.next()) {
-            return rs.getLong(COUNT_COLUMN);
+            return rs.getLong(entity.COUNT_ALIAS);
         } else {
-            throw new SQLException(SELECT_COUNT + tableName + "; couldn't get any result");
+            throw new SQLException(query+ "; couldn't get any result");
         }
     }
 }

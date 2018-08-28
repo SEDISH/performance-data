@@ -44,7 +44,7 @@ public class Person extends Entity {
 
     private LocalDateTime dateChanged;
 
-    private Long voided;
+    private long voided;
 
     private Long voidedBy;
 
@@ -59,10 +59,9 @@ public class Person extends Entity {
     private LocalTime birthtime;
 
     @Builder
-    public Person(long id, String gender, LocalDate birthdate, long birthdateEstimated, long dead,
-                  LocalDateTime deathDate, long causeOfDeath, long creator,
-                  LocalDateTime dateCreated, long changedBy, LocalDateTime dateChanged, long voided,
-                  long voidedBy, LocalDateTime dateVoided, String voidReason, String uuid,
+    public Person(long id, String gender, LocalDate birthdate, long birthdateEstimated, long dead, LocalDateTime deathDate,
+                  long causeOfDeath, long creator, LocalDateTime dateCreated, Long changedBy, LocalDateTime dateChanged,
+                  long voided, Long voidedBy, LocalDateTime dateVoided, String voidReason, String uuid,
                   long deathdateEstimated, LocalTime birthtime) {
         super(id);
         this.gender = gender;

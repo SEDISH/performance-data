@@ -81,12 +81,11 @@ public class GeneratorService {
     private void addPersonalData(GeneratorOptions options, DataManager ins) throws SQLException {
         Patient pat = new Patient();
 
-        long size = ins.getCount(pat.getTABLE_NAME());
+        long size = ins.getCount(pat);
         ChunkKeeper chunkKeeper = new ChunkKeeper(size, insertsNumber);
 
         while (chunkKeeper.hasNext()) {
-            List<Entity> entities = ins.fetchEntities(pat.getTABLE_NAME(), pat.getID_COLUMN(),
-                    chunkKeeper.getChunkSize(), chunkKeeper.getCurrent());
+            List<Entity> entities = ins.fetchEntities(pat.getSelect(chunkKeeper.getChunkSize(), chunkKeeper.getCurrent()));
 
             List<PatientIdentifier> identifiers = patientIdGeneratorService.generateEntities(entities,
                     options.getStartDate(), PatientIdEnum.ECID);

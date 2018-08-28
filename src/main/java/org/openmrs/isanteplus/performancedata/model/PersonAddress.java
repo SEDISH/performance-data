@@ -53,7 +53,7 @@ public class PersonAddress extends Entity {
 
     private LocalDateTime dateCreated;
 
-    private Long voided;
+    private long voided;
 
     private Long voidedBy;
 
@@ -81,7 +81,7 @@ public class PersonAddress extends Entity {
     public PersonAddress(long id, long personId, long preferred, String address1, String address2, String cityVillage,
                          String stateProvince, String postalCode, String country, String latitude, String longitude,
                          LocalDateTime startDate, LocalDateTime endDate, long creator, LocalDateTime dateCreated,
-                         long voided, long voidedBy, LocalDateTime dateVoided, String voidReason, String countyDistrict,
+                         long voided, Long voidedBy, LocalDateTime dateVoided, String voidReason, String countyDistrict,
                          String address3, String address4, String address5, String address6, LocalDateTime dateChanged,
                          Long changedBy, String uuid) {
         super(id);

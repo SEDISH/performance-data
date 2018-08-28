@@ -70,7 +70,7 @@ public class Obs extends Entity {
 
     private LocalDateTime dateCreated;
 
-    private Long voided;
+    private long voided;
 
     private Long voidedBy;
 
@@ -85,14 +85,12 @@ public class Obs extends Entity {
     private String formNamespaceAndPath;
 
     @Builder
-    public Obs(long id, long personId, long conceptId, long encounterId, Long orderId,
-               LocalDateTime obsDatetime, long locationId, Long obsGroupId,
-               String accessionNumber, Long valueGroupId, Long valueBoolean, Long valueCoded,
-               Long valueCodedNameId, Long valueDrug, LocalDateTime valueDatetime,
-               Double valueNumeric, String valueModifier, String valueText, String valueComplex,
-               String comments, long creator, LocalDateTime dateCreated, long voided,
-               long voidedBy, LocalDateTime dateVoided, String voidReason, String uuid,
-               Long previousVersion, String formNamespaceAndPath) {
+    public Obs(long id, long personId, long conceptId, long encounterId, Long orderId, LocalDateTime obsDatetime,
+               long locationId, Long obsGroupId, String accessionNumber, Long valueGroupId, Long valueBoolean,
+               Long valueCoded, Long valueCodedNameId, Long valueDrug, LocalDateTime valueDatetime, Double valueNumeric,
+               String valueModifier, String valueText, String valueComplex, String comments, long creator,
+               LocalDateTime dateCreated, long voided, Long voidedBy, LocalDateTime dateVoided, String voidReason,
+               String uuid, Long previousVersion, String formNamespaceAndPath) {
         super(id);
         this.personId = personId;
         this.conceptId = conceptId;

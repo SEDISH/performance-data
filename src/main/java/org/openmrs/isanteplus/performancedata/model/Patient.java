@@ -20,34 +20,25 @@ public class Patient extends Entity {
             + " values (:id, :creator, :dateCreated, :changedBy, :dateChanged, " +
             ":voided, :voidedBy, :dateVoided, :voidReason)";
 
-    private long creator;
-
-    private LocalDateTime dateCreated;
-
     private Long changedBy;
-
     private LocalDateTime dateChanged;
 
-    private Long voided;
-
-    private Long voidedBy;
-
-    private LocalDateTime dateVoided;
-
-    private String voidReason;
-
     @Builder
-    public Patient(long id, long creator, LocalDateTime dateCreated, long changedBy,
-                   LocalDateTime dateChanged, long voided, long voidedBy,
+    public Patient(long id, long creator, LocalDateTime dateCreated, Long changedBy,
+                   LocalDateTime dateChanged, long voided, Long voidedBy,
                    LocalDateTime dateVoided, String voidReason) {
-        super(id);
-        this.creator = creator;
-        this.dateCreated = dateCreated;
+        super(id, creator, dateCreated, voided, voidedBy, dateVoided, voidReason);
         this.changedBy = changedBy;
         this.dateChanged = dateChanged;
-        this.voided = voided;
-        this.voidedBy = voidedBy;
-        this.dateVoided = dateVoided;
-        this.voidReason = voidReason;
+    }
+
+    @Override
+    public String getSelect(long limit, long offset) {
+        return getSelect(ID_COLUMN, TABLE_NAME, limit, offset);
+    }
+
+    @Override
+    public String getCount() {
+        return getCount(TABLE_NAME);
     }
 }
