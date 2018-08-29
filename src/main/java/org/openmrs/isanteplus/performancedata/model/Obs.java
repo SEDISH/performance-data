@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +14,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Obs extends Entity {
 
-    protected final String TABLE_NAME = "obs";
-    protected final String ID_COLUMN = "obs_id";
-    protected final String PREPARED_SQL = "insert into " + TABLE_NAME +
+    private final String TABLE_NAME = "obs";
+    private final String ID_COLUMN = "obs_id";
+    private final String PREPARED_SQL = "insert into " + TABLE_NAME +
             " (obs_id, person_id, concept_id, encounter_id, order_id, obs_datetime, " +
             "location_id, obs_group_id, accession_number, value_group_id, value_boolean, value_coded," +
             "value_coded_name_id, value_drug, value_datetime, value_numeric," +
@@ -66,18 +68,6 @@ public class Obs extends Entity {
 
     private String comments;
 
-    private long creator;
-
-    private LocalDateTime dateCreated;
-
-    private Long voided;
-
-    private Long voidedBy;
-
-    private LocalDateTime dateVoided;
-
-    private String voidReason;
-
     private String uuid;
 
     private Long previousVersion;
@@ -85,15 +75,13 @@ public class Obs extends Entity {
     private String formNamespaceAndPath;
 
     @Builder
-    public Obs(long id, long personId, long conceptId, long encounterId, Long orderId,
-               LocalDateTime obsDatetime, long locationId, Long obsGroupId,
-               String accessionNumber, Long valueGroupId, Long valueBoolean, Long valueCoded,
-               Long valueCodedNameId, Long valueDrug, LocalDateTime valueDatetime,
-               Double valueNumeric, String valueModifier, String valueText, String valueComplex,
-               String comments, long creator, LocalDateTime dateCreated, long voided,
-               long voidedBy, LocalDateTime dateVoided, String voidReason, String uuid,
-               Long previousVersion, String formNamespaceAndPath) {
-        super(id);
+    public Obs(long id, long personId, long conceptId, long encounterId, Long orderId, LocalDateTime obsDatetime,
+               long locationId, Long obsGroupId, String accessionNumber, Long valueGroupId, Long valueBoolean,
+               Long valueCoded, Long valueCodedNameId, Long valueDrug, LocalDateTime valueDatetime, Double valueNumeric,
+               String valueModifier, String valueText, String valueComplex, String comments, long creator,
+               LocalDateTime dateCreated, long voided, Long voidedBy, LocalDateTime dateVoided, String voidReason,
+               String uuid, Long previousVersion, String formNamespaceAndPath) {
+        super(id, creator, dateCreated, voided, voidedBy, dateVoided, voidReason);
         this.personId = personId;
         this.conceptId = conceptId;
         this.encounterId = encounterId;
@@ -113,14 +101,28 @@ public class Obs extends Entity {
         this.valueText = valueText;
         this.valueComplex = valueComplex;
         this.comments = comments;
-        this.creator = creator;
-        this.dateCreated = dateCreated;
-        this.voided = voided;
-        this.voidedBy = voidedBy;
-        this.dateVoided = dateVoided;
-        this.voidReason = voidReason;
         this.uuid = uuid;
         this.previousVersion = previousVersion;
         this.formNamespaceAndPath = formNamespaceAndPath;
+    }
+
+    @Override
+    public String getCount() {
+        return getCount(TABLE_NAME);
+    }
+
+    @Override
+    public String getLastID() {
+        return "SELECT MAX(" + ID_COLUMN + ") as " + COUNT_ALIAS + " FROM " + TABLE_NAME;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

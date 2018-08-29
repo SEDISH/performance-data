@@ -29,7 +29,7 @@ public class PatientIdentifier extends Entity {
     private LocalDateTime dateCreated;
     private LocalDateTime dateChanged;
     private Long changedBy;
-    private Long voided;
+    private long voided;
     private Long voidedBy;
     private LocalDateTime dateVoided;
     private String voidReason;
@@ -38,7 +38,7 @@ public class PatientIdentifier extends Entity {
     @Builder
     public PatientIdentifier(long id, long patientId, String identifier, long identifierType, long preferred,
                              Long locationId, long creator, LocalDateTime dateCreated, LocalDateTime dateChanged,
-                             Long changedBy, long voided, long voidedBy, LocalDateTime dateVoided, String voidReason,
+                             Long changedBy, long voided, Long voidedBy, LocalDateTime dateVoided, String voidReason,
                              String uuid) {
         super(id);
         this.patientId = patientId;

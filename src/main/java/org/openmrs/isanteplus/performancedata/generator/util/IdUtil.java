@@ -1,5 +1,10 @@
 package org.openmrs.isanteplus.performancedata.generator.util;
 
+import org.openmrs.isanteplus.performancedata.model.Obs;
+import org.openmrs.isanteplus.performancedata.model.connection.DataManager;
+
+import java.sql.SQLException;
+
 public final class IdUtil {
 
     private static final long INITIAL_ID = 100L;
@@ -62,6 +67,11 @@ public final class IdUtil {
 
     public static String getCodeNational() {
         return String.valueOf(codeNational++);
+    }
+
+    public static void initObs(DataManager dataManager) throws SQLException {
+        Obs obs = new Obs();
+        obsId = dataManager.getLastID(obs) + 1;
     }
 
     private IdUtil() {}

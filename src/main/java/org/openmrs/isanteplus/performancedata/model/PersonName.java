@@ -34,7 +34,7 @@ public class PersonName extends Entity {
     private String degree;
     private long creator;
     private LocalDateTime dateCreated;
-    private Long voided;
+    private long voided;
     private Long voidedBy;
     private LocalDateTime dateVoided;
     private String voidReason;
@@ -45,7 +45,7 @@ public class PersonName extends Entity {
     @Builder
     public PersonName(long id, long preferred, long personId, String prefix, String givenName, String middleName,
                       String familyNamePrefix, String familyName, String familyName2, String familyNameSuffix,
-                      String degree, long creator, LocalDateTime dateCreated, long voided, long voidedBy,
+                      String degree, long creator, LocalDateTime dateCreated, long voided, Long voidedBy,
                       LocalDateTime dateVoided, String voidReason, Long changedBy, LocalDateTime dateChanged, String uuid) {
         super(id);
         this.preferred = preferred;

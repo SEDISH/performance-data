@@ -3,6 +3,7 @@ package org.openmrs.isanteplus.performancedata.generator.service;
 import me.tongfei.progressbar.ProgressBar;
 import org.openmrs.isanteplus.performancedata.generator.predefined.PatientIdEnum;
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
+import org.openmrs.isanteplus.performancedata.generator.util.IdUtil;
 import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Entity;
 import org.openmrs.isanteplus.performancedata.model.Obs;
@@ -72,21 +73,47 @@ public class GeneratorService {
                 generateClinicData(options, ins, progressBar);
             }
             addPersonalData(options, ins);
+            // Adds additional observations
+            addObsData(ins);
         } finally {
             ins.closePool();
             progressBar.stop();
         }
     }
 
-    private void addPersonalData(GeneratorOptions options, DataManager ins) throws SQLException {
-        Patient pat = new Patient();
+    private void addObsData(DataManager dataManager) throws SQLException {
+        Encounter encounter = new Encounter();
+        IdUtil.initObs(dataManager);
 
-        long size = ins.getCount(pat.getTABLE_NAME());
+        long size = dataManager.getCount(encounter);
         ChunkKeeper chunkKeeper = new ChunkKeeper(size, insertsNumber);
 
         while (chunkKeeper.hasNext()) {
-            List<Entity> entities = ins.fetchEntities(pat.getTABLE_NAME(), pat.getID_COLUMN(),
-                    chunkKeeper.getChunkSize(), chunkKeeper.getCurrent());
+            List<Encounter> encounters = dataManager.fetchEncounters(encounter.getSelect(
+                    chunkKeeper.getChunkSize(), chunkKeeper.getCurrent()));
+            ClinicDataChunk dataChunk = new ClinicDataChunk();
+
+            for (Encounter enc : encounters) {
+                List<Obs> observations = obsGenerationService.generateLabResults(enc, enc.getDateChanged());
+                dataChunk.addAllObses(observations);
+                if (observations.size() >= chunkKeeper.getChunkSize()) {
+                    dataChunk.insertAndFlush(dataManager);
+                }
+            }
+
+            dataChunk.insertAndFlush(dataManager);
+            chunkKeeper.getChunk();
+        }
+    }
+
+    private void addPersonalData(GeneratorOptions options, DataManager ins) throws SQLException {
+        Patient pat = new Patient();
+
+        long size = ins.getCount(pat);
+        ChunkKeeper chunkKeeper = new ChunkKeeper(size, insertsNumber);
+
+        while (chunkKeeper.hasNext()) {
+            List<Entity> entities = ins.fetchEntities(pat.getSelect(chunkKeeper.getChunkSize(), chunkKeeper.getCurrent()));
 
             List<PatientIdentifier> identifiers = patientIdGeneratorService.generateEntities(entities,
                     options.getStartDate(), PatientIdEnum.ECID);

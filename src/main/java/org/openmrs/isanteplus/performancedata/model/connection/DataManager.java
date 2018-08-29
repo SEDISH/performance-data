@@ -1,7 +1,9 @@
 package org.openmrs.isanteplus.performancedata.model.connection;
 
 import org.openmrs.isanteplus.performancedata.generator.util.ChunkKeeper;
+import org.openmrs.isanteplus.performancedata.model.Encounter;
 import org.openmrs.isanteplus.performancedata.model.Entity;
+import org.openmrs.isanteplus.performancedata.model.mapper.EncounterMapper;
 import org.openmrs.isanteplus.performancedata.model.mapper.EntityMapper;
 import org.openmrs.isanteplus.performancedata.options.GeneratorOptions;
 
@@ -21,10 +23,6 @@ public class DataManager {
     private final MySqlConnector connector;
 
     private final long batchNumber;
-
-    private final String COUNT_COLUMN = "size";
-    private final String SELECT_COUNT = "SELECT COUNT(*) as " + COUNT_COLUMN + " FROM ";
-    private final String ID_COLUMN = "id";
 
     public DataManager(GeneratorOptions options, long batchNumber, long packetSize)
             throws PropertyVetoException {
@@ -49,25 +47,37 @@ public class DataManager {
         }
     }
 
-    public  List<Entity> fetchEntities(String tableName, String entityIdName, long limit, long offset) {
+    public List<Entity> fetchEntities(String query) {
         NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
                 connector.getCpds());
-        return template.query("SELECT "+ entityIdName + " as " + ID_COLUMN + " FROM " + tableName + " LIMIT "
-                + limit + " OFFSET " + offset,
-                new EntityMapper());
+        return template.query(query, new EntityMapper());
+    }
+
+    public List<Encounter> fetchEncounters(String query) {
+        NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(
+                connector.getCpds());
+        return template.query(query, new EncounterMapper());
     }
 
     public void closePool() {
         connector.closePool();
     }
 
-    public long getCount(String tableName) throws SQLException {
+    public long getCount(Entity entity) throws SQLException {
+        return getLong(entity.getCount(), entity.COUNT_ALIAS);
+    }
+
+    public long getLastID(Entity entity) throws SQLException {
+        return getLong(entity.getLastID(), entity.COUNT_ALIAS);
+    }
+
+    private long getLong(String query, String alias) throws SQLException {
         Statement st = connector.createStatement();
-        ResultSet rs = st.executeQuery(SELECT_COUNT + tableName);
+        ResultSet rs = st.executeQuery(query);
         if (rs.next()) {
-            return rs.getLong(COUNT_COLUMN);
+            return rs.getLong(alias);
         } else {
-            throw new SQLException(SELECT_COUNT + tableName + "; couldn't get any result");
+            throw new SQLException(query+ "; couldn't get any result");
         }
     }
 }
