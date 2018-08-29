@@ -72,7 +72,6 @@ public final class IdUtil {
     public static void initObs(DataManager dataManager) throws SQLException {
         Obs obs = new Obs();
         obsId = dataManager.getLastID(obs) + 1;
-
     }
 
     private IdUtil() {}

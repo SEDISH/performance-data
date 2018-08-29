@@ -69,10 +69,11 @@ public class GeneratorService {
 
         try {
             progressBar.start();
-//            for (long i = 0; i < options.getClinicNumber(); i++) {
-//                generateClinicData(options, ins, progressBar);
-//            }
-//            addPersonalData(options, ins);
+            for (long i = 0; i < options.getClinicNumber(); i++) {
+                generateClinicData(options, ins, progressBar);
+            }
+            addPersonalData(options, ins);
+            // Adds additional observations
             addObsData(ins);
         } finally {
             ins.closePool();
